@@ -1,0 +1,13 @@
+Package: WKMorrisPhD2012
+Type: Package
+Title: Vegetation management and planning
+Version: 0.1
+Date: 2012-06-19
+Author: Will Morris
+Maintainer: Will Morris <wkmor1@gmail.com>
+Description: Upcoming
+Depends:R (>= 2.15.0)
+License: Unlimited
+URL: http://wkmor1.wordpress.com/
+ByteCompile: yes
+LazyLoad: yes
