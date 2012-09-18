@@ -1,6 +1,6 @@
 earth_BI <- function(n_boot, BIModelOutput, inputs, verbose=FALSE) {
   
-  attach(input)
+  attach(inputs)
   
   earth_BI_obj <- vector('list', length(inputs))
   names(earth_BI_obj) <- names(inputs)
