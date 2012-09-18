@@ -18,6 +18,7 @@ predict(x, newdata=NULL)
  \item{inputs}{}
  \item{x}{a model object produced by \code{earth_BI}.}
  \item{newdata}{list of 3 matrices of input data to predict area from. List elements must have names coresponding to management scenarios.}
+ \item{verbose}{}
 }
 
 \details{
@@ -45,8 +46,12 @@ data(BIModelOutput)
 data(BIWParams)
 data(BIManParams)
 data(BIEcoParams)
+
+inputs <- list(BIW=BIWParams, BIMan=BIManParams, BIEco=BIEcoParams)
+    
 earth_BI_obj <- earth_BI(n_boot=9, BIModelOutput=BIModelOutput, 
-  inputs=list(BIWParams=BIWParams, BIManParams=BIManParams, 
-    BIEcoParams=BIEcoParams))
+  inputs=inputs)
+      
+earth_BI_preds <- predict_BI(earth_BI_obj, inputs)    
 }
 
