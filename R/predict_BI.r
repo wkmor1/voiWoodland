@@ -1,4 +1,4 @@
-predict_BI <- function(x, newdata, verbose=FALSE) {
+predict_BI <- function(dir, newdata, verbose=FALSE) {
     
   predict_BI_obj <- vector('list', 3); gc(FALSE)
   names(predict_BI_obj) <- c('BIW', 'BIMan', 'BIEco')
@@ -18,12 +18,18 @@ predict_BI <- function(x, newdata, verbose=FALSE) {
          
         if(verbose) cat('Prediction: ')
         
-        predict_BI_obj_ijk[[1]] <- predict(x[[i]][[j]][[k]][[1]], newdata[[i]]); gc(FALSE)
+        load(sprintf('%s/%s_%s_%s.rda', dir, i, j, k))
+        
+        predict_BI_obj_ijk[[1]] <- as.integer(((plogis(predict(earth_BI_obj_ijk[[1]], 
+          newdata[[i]])) - .001) / .998) * (1000 / 3)); gc(FALSE)
         
         if(verbose) cat(sprintf('%s %s %s \n', i, j, k))
         
-        predict_BI_obj_ijk[[2]] <- sapply(seq_along(x[[i]][[j]][[k]][[2]]), function(REP) {
-          predict(x[[i]][[j]][[k]][[2]][[REP]], newdata[[i]])}); gc(FALSE)
+        predict_BI_obj_ijk[[2]] <- sapply(seq_along(earth_BI_obj_ijk[[2]]), function(REP) {
+          as.integer(((plogis(predict(earth_BI_obj_ijk[[2]][[REP]], 
+          newdata[[i]])) - .001) / .998) * (1000 / 3))}); gc(FALSE)
+        
+        rm(earth_BI_obj_ijk)
         
         predict_BI_obj_ij[[k]] <- predict_BI_obj_ijk; gc(FALSE)
         
