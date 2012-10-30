@@ -1,4 +1,4 @@
-predict_BI <- function(dir, newdata, verbose=FALSE) {
+predict_BI <- function(newdata, dir, verbose=FALSE) {
     
   predict_BI_obj <- vector('list', 3); gc(FALSE)
   names(predict_BI_obj) <- c('BIW', 'BIMan', 'BIEco')
