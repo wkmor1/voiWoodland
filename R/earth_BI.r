@@ -1,6 +1,6 @@
-earth_BI <- function(n_boot, BIModelOutput, inputs, dir, verbose=FALSE) {
+earth_BI <- function(BI_output, BI_input, n_boot, dir, verbose=FALSE) {
     
-  for (i in names(inputs)) {
+  for (i in names(BI_input)) {
       
     for (j in c('LDW', 'HDW', 'MAT')) {
           
@@ -8,13 +8,13 @@ earth_BI <- function(n_boot, BIModelOutput, inputs, dir, verbose=FALSE) {
       
         earth_BI_obj_ijk <- vector('list', 2)
         
-        BIModelOutputSS <- subset(BIModelOutput, CTAbbr == i & SSAbbr == j & Timestep == k * 10)
-        BIModelOutputSS <- merge(BIModelOutputSS, inputs[[i]], by.x=1, by.y=0)
+        BI_outputSS <- subset(BI_output, CTAbbr == i & SSAbbr == j & Timestep == k * 10)
+        BI_outputSS <- merge(BI_outputSS, BI_input[[i]], by.x=1, by.y=0)
         
         if(verbose) cat('Model: ')
         
         earth_BI_obj_ijk[[1]] <- earth(qlogis(((Area / (1000 / 3)) * .998) + .001) ~ ., 
-          data=BIModelOutputSS[-1:-4], degree=3)
+          data=BI_outputSS[-1:-4], degree=3)
         
         earth_BI_obj_ijk[[1]]$fitted.values <- NA
         
@@ -22,7 +22,7 @@ earth_BI <- function(n_boot, BIModelOutput, inputs, dir, verbose=FALSE) {
         
         earth_BI_obj_ijk[[2]] <- mclapply(integer(n_boot), eval.parent(substitute(function(...) {
           x <- earth(qlogis(((Area / (1000 / 3)) * .998) + .001) ~ ., 
-            data=BIModelOutputSS[sample(seq_len(nrow(BIModelOutputSS)), replace=TRUE), -1:-4], 
+            data=BI_outputSS[sample(seq_len(nrow(BI_outputSS)), replace=TRUE), -1:-4], 
             degree=3)
           x$fitted.values <- NA
           x
