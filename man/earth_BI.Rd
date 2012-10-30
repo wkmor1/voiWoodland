@@ -8,21 +8,21 @@
 \description{Model and predict Box Ironbark Woodland STM outcomes using Multivariate Adaptive Regression Splines}
 
 \usage{
-earth_BI(n_boot, BIModelOutput, inputs)
-predict(x, newdata=NULL)
+earth_BI(BI_output, BI_input, n_boot, dir, verbose=FALSE)
+predict(newdata, dir, verbose=FALSE)
 }
 
 \arguments{
- \item{n_boot}{integer. number of bootstrap samples to fit in addition to full model.}
- \item{BIModelOutput}{}
- \item{inputs}{}
- \item{x}{a model object produced by \code{earth_BI}.}
- \item{newdata}{list of 3 matrices of input data to predict area from. List elements must have names coresponding to management scenarios.}
- \item{verbose}{}
+ \item{BI_output}{data frame. The output from the BIFAW management state and transition model.}
+ \item{BI_input}{list. Input parameters elicted from experts for BIFAW management state and transition models}
+ \item{n_boot}{integer. Number of bootstrap samples to fit in addition to full model.}
+ \item{dir}{character string. Path to where the MARS submodel objects will be stored.}
+ \item{newdata}{list. In the same format as `inputs'. List elements are matrices and must have names coresponding to management scenarios with colum names corresponding to the parameter names of `inputs'.}
+ \item{verbose}{logical. If \code{TRUE} then the model being fit (or predicted) is displayed on the console.}
 }
 
 \details{
-These functions model, and predict new data, respectively, from the output of the state and transition models for Box Ironbark Woodlands of Czembor etal 2011 (\link{http://wkmor1.files.wordpress.com/2012/06/czembormorrisveskwintle2011.pdf}). The models are fitted using Multivariate Adaptive Regression Splines (MARS) with the \code{earth} function from the package `earth'. The function earth_BI fits a set of MARS model for the selected management types specified in the \code{inputs} list. For each management a models are fit for each vegetation state. 
+These functions model, and predict new data, respectively, from the output of the state and transition models for Box Ironbark Woodlands of Czembor etal 2011 (\link{http://wkmor1.files.wordpress.com/2012/06/czembormorrisveskwintle2011.pdf}). The models are fitted using Multivariate Adaptive Regression Splines (MARS) with the \code{earth} function from the package `earth'. The function earth_BI fits a set of MARS model for the selected management types specified in the \code{inputs} list. For each management type a model is fit for each vegetation state and within in that, for each timestep 10 through 150 years in increments of 10 years. 
 }
 
 \value{
@@ -38,20 +38,16 @@ William K. Morris.
 }
 
 \seealso{
-\code{\link{earth}}, \code{\link{BIModelOutput}}, \code{\link{BIWParams}}, \code{\link{BIManParams}} and \code{\link{BIEcoParams}}
+\code{\link{earth}}, \code{\link{BI_output}}, \code{\link{BI_input}}
 }
 
 \examples{
-data(BIModelOutput)
-data(BIWParams)
-data(BIManParams)
-data(BIEcoParams)
+data(BI_output)
+data(BI_input)
 
-inputs <- list(BIW=BIWParams, BIMan=BIManParams, BIEco=BIEcoParams)
-    
-earth_BI_obj <- earth_BI(n_boot=9, BIModelOutput=BIModelOutput, 
-  inputs=inputs)
-      
-earth_BI_preds <- predict_BI(earth_BI_obj, inputs)    
+earth_BI(BI_output=BI_output, BI_input=BI_input,
+  n_boot=9, dir=tempdir(), verbose=TRUE)
+
+earth_BI_preds <- predict_BI(BI_input, dir=tempdir(), verbose=TRUE)   
 }
 
