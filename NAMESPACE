@@ -1,2 +1,3 @@
 import(earth)
+import(parallel)
 exportPattern("^[^\\.]")
