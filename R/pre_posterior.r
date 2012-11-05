@@ -12,7 +12,10 @@ pre_posterior <- function(x, n, size) {
     if(m < 1 && eta) {
       x.star <- unname(x)
       if(diff(range(x)) == 1) x.star <- rep(0, length(x))
-      if(var(x[x != 0])) x.star[x.star != 0] <- rbeta(length(x) - sum(x == 0), shape[1], shape[2] + size)
+      if(var(x[x != 0])) { 
+        x.star[x.star != 0] <- rbeta(length(x) - sum(x == 0), shape[1], 
+          shape[2] + size)
+      }  
     } else {
       if(diff(range(x)) == 1) x.star <- rep(1, length(x))
       if(var(x[x != 0])) {
@@ -25,7 +28,8 @@ pre_posterior <- function(x, n, size) {
     return(x.star)
   }
   
-  ans <- lapply(p, function(y) update(phi=y, x=x, size=size, eta=eta, shape=shape))
+  ans <- lapply(p, 
+    function(y) update(phi=y, x=x, size=size, eta=eta, shape=shape))
   attr(ans, 'probability') <- p
   return(ans)
   
