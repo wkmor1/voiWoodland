@@ -13,7 +13,7 @@ earth_BI <- function(BI_output, BI_input, n_boot, dir, verbose=FALSE) {
         
         if(verbose) cat('Model: ')
         
-        earth_BI_obj_ijk[[1]] <- earth(qlogis(((Area / (1000 / 3)) * .998) + .001) ~ ., 
+        earth_BI_obj_ijk[[1]] <- earth(qlogis(((Area) * .998) + .001) ~ ., 
           data=BI_outputSS[-1:-4], degree=3)
         
         earth_BI_obj_ijk[[1]]$fitted.values <- NA
@@ -21,7 +21,7 @@ earth_BI <- function(BI_output, BI_input, n_boot, dir, verbose=FALSE) {
         if(verbose) cat(sprintf('%s %s %s \n', i, j, k))
         
         earth_BI_obj_ijk[[2]] <- mclapply(integer(n_boot), eval.parent(substitute(function(...) {
-          x <- earth(qlogis(((Area / (1000 / 3)) * .998) + .001) ~ ., 
+          x <- earth(qlogis(((Area) * .998) + .001) ~ ., 
             data=BI_outputSS[sample(seq_len(nrow(BI_outputSS)), replace=TRUE), -1:-4], 
             degree=3)
           x$fitted.values <- NA
