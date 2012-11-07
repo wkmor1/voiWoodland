@@ -20,14 +20,14 @@ predict_BI <- function(newdata, dir, verbose=FALSE) {
         
         load(sprintf('%s/%s_%s_%s.rda', dir, i, j, k))
         
-        predict_BI_obj_ijk[[1]] <- as.integer(((plogis(predict(earth_BI_obj_ijk[[1]], 
-          newdata[[i]])) - .001) / .998)); gc(FALSE)
+        predict_BI_obj_ijk[[1]] <- ((plogis(predict(earth_BI_obj_ijk[[1]], 
+          newdata[[i]])) - .001) / .998); gc(FALSE)
         
         if(verbose) cat(sprintf('%s %s %s \n', i, j, k))
         
         predict_BI_obj_ijk[[2]] <- sapply(seq_along(earth_BI_obj_ijk[[2]]), function(REP) {
-          as.integer(((plogis(predict(earth_BI_obj_ijk[[2]][[REP]], 
-          newdata[[i]])) - .001) / .998))}); gc(FALSE)
+          ((plogis(predict(earth_BI_obj_ijk[[2]][[REP]], 
+          newdata[[i]])) - .001) / .998)}); gc(FALSE)
         
         rm(earth_BI_obj_ijk)
         
