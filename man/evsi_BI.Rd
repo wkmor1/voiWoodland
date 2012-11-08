@@ -1,76 +1,37 @@
 \name{evsi_BI}
 \alias{evsi_BI}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{
-%%  ~~function to do ... ~~
-}
-\description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-}
+\alias{calc_evsi_BI}
+
+\title{Expected value of sample information for Box Ironbark management}
+
+\description{Calculate the expected value of sample information for Box Ironbark state and transition models}
+
 \usage{
 evsi_BI(sens_pp_BI, manage, BI_output)
+calc_evsi_BI(x)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
-  \item{sens_pp_BI}{
-%%     ~~Describe \code{sens_pp_BI} here~~
-}
-  \item{manage}{
-%%     ~~Describe \code{manage} here~~
-}
-  \item{BI_output}{
-%%     ~~Describe \code{BI_output} here~~
-}
-}
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
-\value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
-\references{
-%% ~put references to the literature/web site here ~
-}
-\author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
+  \item{sens_pp_BI}{a Box Ironbark model parameter preposterior sensitivity analysis object}
+  \item{manage}{character string, the management scenario the model parameter the value of sample information is being tested for.}
+  \item{BI_output}{the original Box Ironbark state and transition model output data.}
+  \item{x}{an \code{evsi_BI} object for which to calculate the expected value of sample information}
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+\details{\code{evsi_BI} takes the output of a \code{\link{sens_prepost}} derived preposterior sensitivity analysis for a given Box Ironbark model parameter and calculates the components of the expected value of information for that parameter using \code{\link{constrOptim}} to maximise the objective function defined by \code{\link{obj_fun_simp}}. Those components being the expected value of each individual preposterior distribution and the expected value given the prior distribution. \code{calc_evsi_BI} takes the output of \code{evsi_BI} and calculates EVSI as the mean of the expected value for individual preposterior distributions minus the the expected value given the prior distribution.}
 
-\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+\value{\code{evsi_BI} returns a two element list. The first element is the expected value given the prior distribution (no new information) and the second is a list of expected values for each preposterior distribution produced by \code{\link{sens_prepost}}. 
+\code{calc_evsi_BI} returns the expected value of sample information as length 1 numeric vector.}
+
+\references{href{http://books.google.com/books?id=tJE_AQAAIAAJ}{Raiffa, H. and Schlaifer, R. (1968). Applied statistical decision theory. John Wiley & Sons Inc., New York.}}
+
+\author{William K. Morris.}
+
+\seealso{\code{\link{constrOptim}}, \code{\link{sens_propost}}, \code{\link{obj_fun_simp}}}
+
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (sens_pp_BI, manage, BI_output) 
-{
-    init <- c(1/3, 1/3)
-    ui <- rbind(c(1, 0), c(0, 1), c(-1, 0), c(0, -1), c(-1, -1))
-    ci <- c(0, 0, -1, -1, -1)
-    e_max <- constrOptim(init, function(x) {
-        obj_fun_simp(x, BI_output = BI_output, upd.manage = "NONE")
-    }, NULL, ui, ci, control = list(fnscale = -1))
-    max_k <- mclapply(1:10, function(k) {
-        constrOptim(init, function(x) {
-            obj_fun_simp(x, sens_pp_BI = sens_pp_BI, BI_output = BI_output, 
-                upd.manage = manage, k)
-        }, NULL, ui, ci, control = list(fnscale = -1))
-    }, mc.cores = detectCores())
-    return(list(e_max, max_k))
-  }
+load('sens_pp_ProbabilityLDWtoREGgivenBIWthenCoppice.rda')
+evsi_BI_obj <- evsi_BI(sens_pp_BI=sens_pp_BI, manage='BIW', BI_output=BI_output)
+calc_evsi_BI(evsi_BI_obj)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+

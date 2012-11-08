@@ -4,35 +4,25 @@
 
 \title{Fit a beta distribution via moment matching.}
 
-\description{}
+\description{Estimate the shape parameters of a beta distributions via moment matching of a sample dataset}
 
-\usage{}
+\usage{mbeta(x)}
 
 \arguments{
- \item{}{}
- \item{}{}
- \item{}{}
- \item{}{}
- \item{}{}
- \item{}{}
+ \item{x}{numeric vector. All elements must be positive and less than one.}
 }
 
-\details{}
+\details{This function is used to obtain point estimates of the shape parameters of a beta distribution using matching of its first two moments.}
 
-\value{
-
-}
-
-\references{
-
-}
+\value{numeric, a length two vector of the two shape parameters of a beta distribution.}
 
 \author{
 William K. Morris.
 }
 
-\seealso{
-}
+\seealso{\code{link{dbeta}}}
 
 \examples{
+x <- rbeta{100, .5, .5}
+mmbeta(x)
 }
