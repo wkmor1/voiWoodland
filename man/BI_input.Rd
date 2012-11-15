@@ -21,7 +21,7 @@
 \details{
  The \code{BI_input} data are described in Czembor etal (2011). The dataset consists of a list of three matrices. Each matrix is a sample from the joint prior distribution for the expert elicited models of Box Ironbark Forest and Woodland state and transition models under a different management scenario. The parameters that make up each joint prior have 375 estimates derived by sampling randomly from three plausible distributions 25 times given three point elicitions from five experts.}
 
-\source{href{http://wkmor1.files.wordpress.com/2012/06/czembormorrisveskwintle2011.pdf}{Czembor, C.A., Morris, W.K., Wintle, B.A. and Vesk, P.A. (2011). Quantifying variance components in ecological models based on expert opinion. Journal of Applied Ecology 48:736-745.}}
+\source{\href{http://wkmor1.files.wordpress.com/2012/06/czembormorrisveskwintle2011.pdf}{Czembor, C.A., Morris, W.K., Wintle, B.A. and Vesk, P.A. (2011). Quantifying variance components in ecological models based on expert opinion. Journal of Applied Ecology 48:736-745.}}
 
 \examples{
 data(BI_input)

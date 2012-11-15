@@ -19,7 +19,7 @@
 
 \details{The \code{BI_output} data are described in Czembor etal (2011). The state \code{REG} = regenerating woodland, has been excluded from the dataset as the cover of all states must at add up to one making having all states present in the dataset redundant. For each of the 375 \code{Project}'s there are ten replicates of each state by timestep by management scenario combination.}
 
-\source{href{http://wkmor1.files.wordpress.com/2012/06/czembormorrisveskwintle2011.pdf}{Czembor, C.A., Morris, W.K., Wintle, B.A. and Vesk, P.A. (2011). Quantifying variance components in ecological models based on expert opinion. Journal of Applied Ecology 48:736-745.}
+\source{\href{http://wkmor1.files.wordpress.com/2012/06/czembormorrisveskwintle2011.pdf}{Czembor, C.A., Morris, W.K., Wintle, B.A. and Vesk, P.A. (2011). Quantifying variance components in ecological models based on expert opinion. Journal of Applied Ecology 48:736-745.}
 }
 
 \examples{
