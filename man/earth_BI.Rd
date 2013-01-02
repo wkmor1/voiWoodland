@@ -22,7 +22,7 @@ predict(newdata, dir, verbose=FALSE)
 }
 
 \details{
-These functions model, and predict new data, respectively, from the output of the state and transition models for Box Ironbark Woodlands of Czembor etal 2011 (\link{http://wkmor1.files.wordpress.com/2012/06/czembormorrisveskwintle2011.pdf}). The models are fitted using Multivariate Adaptive Regression Splines (MARS) with the \code{earth} function from the package `earth'. The function \code{earth_BI} fits a set of MARS model for the selected management types specified in the \code{BI_input} list. For each management type a model is fit for each vegetation state and within in that, for each timestep from 10 through 150 years in increments of 10 years. 
+These functions model, and predict new data, respectively, from the output of the state and transition models for Box Ironbark Woodlands of \href{http://wkmor1.files.wordpress.com/2012/06/czembormorrisveskwintle2011.pdf}{Czembor etal 2011}. The models are fitted using Multivariate Adaptive Regression Splines (MARS) with the \code{earth} function from the package `earth'. The function \code{earth_BI} fits a set of MARS model for the selected management types specified in the \code{BI_input} list. For each management type a model is fit for each vegetation state and within in that, for each timestep from 10 through 150 years in increments of 10 years. 
 }
 
 \value{
