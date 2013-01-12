@@ -21,7 +21,7 @@ calc_evi_BI(x)
   \item{n}{integer, number of alternate model parameterisations to use to calculate EVPI from.}
 }
 
-\details{\code{evsi_BI} takes the output of a \code{\link{sens_prepost}} derived preposterior sensitivity analysis for a given Box Ironbark model parameter and calculates the components of the expected value of information for that parameter using \code{\link{constrOptim}} to maximise the objective function defined by \code{\link{obj_fun_simp}}. Those components being the expected value of each individual preposterior distribution and the expected value given the prior distribution. \code{evpi_BI} calcualates the equivalent components for the value of perfect information. \code{calc_evi_BI} takes the output of \code{evsi_BI} or \code{evpi_BI} and calculates the EVI as the mean of the expected value for individual preposterior distributions (or the alternate model parameterisations for EVPI) minus the the expected value given the prior distribution.}
+\details{\code{evsi_BI} takes the output of a \code{\link{sens_prepost_BI}} derived preposterior sensitivity analysis for a given Box Ironbark model parameter and calculates the components of the expected value of information for that parameter using \code{\link{constrOptim}} to maximise the objective function defined by \code{\link{obj_fun_simp}}. Those components being the expected value of each individual preposterior distribution and the expected value given the prior distribution. \code{evpi_BI} calcualates the equivalent components for the value of perfect information. \code{calc_evi_BI} takes the output of \code{evsi_BI} or \code{evpi_BI} and calculates the EVI as the mean of the expected value for individual preposterior distributions (or the alternate model parameterisations for EVPI) minus the the expected value given the prior distribution.}
 
 \value{\code{evsi_BI}/\code{evpi_BI} returns a two element list. The first element is the expected value given the prior distribution (no new information) and the second is a list of expected values for each preposterior distribution  produced by \code{\link{sens_prepost} or alternate model parameterisation of \code{BI_output}}. 
 \code{calc_evi_BI} returns the expected value of information as length 1 numeric vector.}
@@ -30,7 +30,7 @@ calc_evi_BI(x)
 
 \author{William K. Morris.}
 
-\seealso{\code{\link{constrOptim}}, \code{\link{sens_propost}}, \code{\link{obj_fun_simp}}}
+\seealso{\code{\link{constrOptim}}, \code{\link{sens_prepost_BI}}, \code{\link{obj_fun_simp}}}
 
 \examples{
 load('sens_pp_ProbabilityLDWtoREGgivenBIWthenCoppice.rda')
