@@ -11,7 +11,7 @@ evsi_BI <- function(sens_pp_BI, manage, BI_output) {
       BI_output=BI_output, upd.manage='NONE')},
     NULL, ui, ci, control=list(fnscale=-1))
 
-  max_k <- mclapply(1:10, function(k) {
+  max_k <- mclapply(seq_along(sens_pp_BI), function(k) {
       constrOptim(init, 
         function(x) {
           obj_fun_simp(x, sens_pp_BI=sens_pp_BI, 
