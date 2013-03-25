@@ -1,38 +1,26 @@
-obj_fun_simp <- function(x, sens_pp_BI, BI_output, 
-  upd.manage=c('BIW', 'BIMan', 'BIEco', 'NONE'), k) {
+obj_fun_simp <- function(x, BI_output, BIW=NULL, BIMan=NULL, BIEco=NULL, k) {
   
   A <- x[1]
   B <- x[2]
   
-  upd.manage <- match.arg(upd.manage)
+  if (is.null(BIW)) {
+    BIW <- unlist(BI_output[['BIW']][['MAT']][[15]])
+  } else {
+    BIW <- unlist(BIW[[k]][['MAT']][[15]])
+  }
   
-  BIW <- switch(upd.manage,
-    BIW = unlist(sens_pp_BI[[k]][['MAT']][[15]]),
-    BIMan = unlist(subset(BI_output, 
-      Timestep == 150 & CTAbbr == 'BIW' & SSAbbr == 'MAT', select=Area)),
-    BIEco = unlist(subset(BI_output, 
-      Timestep == 150 & CTAbbr == 'BIW' & SSAbbr == 'MAT', select=Area)),
-    NONE = unlist(subset(BI_output, 
-      Timestep == 150 & CTAbbr == 'BIW' & SSAbbr == 'MAT', select=Area)))
+  if (is.null(BIMan)) {
+    BIMan <- unlist(BI_output[['BIMan']][['MAT']][[15]])
+  } else {
+    BIMan <- unlist(BIMan[[k]][['MAT']][[15]])
+  }
   
-  BIMan <- switch(upd.manage,
-    BIMan = unlist(sens_pp_BI[[k]][['MAT']][[15]]),
-    BIW = unlist(subset(BI_output, 
-      Timestep == 150 & CTAbbr == 'BIMan' & SSAbbr == 'MAT', select=Area)),
-    BIEco = unlist(subset(BI_output, 
-      Timestep == 150 & CTAbbr == 'BIMan' & SSAbbr == 'MAT', select=Area)),
-    NONE = unlist(subset(BI_output, 
-      Timestep == 150 & CTAbbr == 'BIMan' & SSAbbr == 'MAT', select=Area)))
-  
-  BIEco <- switch(upd.manage,
-    BIEco = unlist(sens_pp_BI[[k]][['MAT']][[15]]),
-    BIW = unlist(subset(BI_output, 
-      Timestep == 150 & CTAbbr == 'BIEco' & SSAbbr == 'MAT', select=Area)),
-    BIMan = unlist(subset(BI_output, 
-      Timestep == 150 & CTAbbr == 'BIEco' & SSAbbr == 'MAT', select=Area)),
-    NONE = unlist(subset(BI_output, 
-      Timestep == 150 & CTAbbr == 'BIEco' & SSAbbr == 'MAT', select=Area)))
-  
-  mean(A * BIW + B * BIMan + (1 - A - B) * BIEco) 
+  if (is.null(BIEco)) {
+    BIEco <- unlist(BI_output[['BIEco']][['MAT']][[15]])
+  } else {
+    BIEco <- unlist(BIEco[[k]][['MAT']][[15]])
+  }
+     
+  mean(A * BIW + B * BIEco + (1 - A - B) * BIMan) 
   
 }
