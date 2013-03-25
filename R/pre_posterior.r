@@ -24,6 +24,7 @@ pre_posterior <- function(x, n, size) {
         x.star <- rep(x[x != 0], length.out=length(x))
       }  
     }
+    x.star <- sample(x.star)
     attr(x.star, 'm') <- m
     return(x.star)
   }
