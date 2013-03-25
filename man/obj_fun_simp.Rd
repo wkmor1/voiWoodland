@@ -17,7 +17,7 @@
 \value{numeric. The proportion of the landscape in the 'Mature' state.}
 \author{William K. Morris}
 
-\seealso{\code{link{sens_prepost_BI}}, \code{\link{evsi_BI.r}}}
+\seealso{\code{\link{sens_prepost_BI}}, \code{\link{evsi_BI.r}}}
 \examples{
 obj_fun_simp(c(1/3, 1/3), BI_output, "BIW")
 }
