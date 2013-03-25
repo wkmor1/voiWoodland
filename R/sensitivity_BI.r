@@ -26,14 +26,14 @@ sensitivity_BI <- function(dir, newdata, manage, param, n, verbose=FALSE) {
           
         load(sprintf('%s/%s_%s_%s.rda', dir, manage, j, k))
           
-        predict_BI_obj_jk[[1]] <- ((plogis(predict(earth_BI_obj_ijk[[1]], 
-          inputs[[manage]])) - .001) / .998); gc(FALSE)
+        predict_BI_obj_jk[[1]] <- plogis(predict(earth_BI_obj_ijk[[1]], 
+          inputs[[manage]])); gc(FALSE)
           
         if(verbose) cat(sprintf('%s %s %s %s %s \n', param, i, manage, j, k))
           
         predict_BI_obj_jk[[2]] <- sapply(seq_along(earth_BI_obj_ijk[[2]]), function(REP) {
-          ((plogis(predict(earth_BI_obj_ijk[[2]][[REP]], 
-            inputs[[manage]])) - .001) / .998)}); gc(FALSE)
+          plogis(predict(earth_BI_obj_ijk[[2]][[REP]], 
+            inputs[[manage]]))}); gc(FALSE)
           
         rm(earth_BI_obj_ijk)
           
