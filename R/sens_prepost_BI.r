@@ -1,38 +1,44 @@
 sens_prepost_BI <- function(dir, newdata, manage, param, n, verbose=FALSE) {
   
   sensitivity_BI_obj <- vector('list', n)
-  preposts <- pre_posterior(newdata[[manage]][, param], n, 1000)
-
+    preposts <- lapply(param, 
+      function(x) pre_posterior(newdata[[manage]][, x], n, 1000)
+    )
+    
   for (i in seq_len(n)) {
     
     inputs <- newdata
-    inputs[[manage]][, param] <- preposts[[i]]
-      
+    
+    for (m in seq_along(param)) {
+      inputs[[manage]][, param[m]] <- preposts[[m]][[i]]
+    }
+  
     predict_BI_obj <- vector('list', 3)
     names(predict_BI_obj) <- c('LDW', 'HDW', 'MAT')
       
     for (j in names(predict_BI_obj)) {
       
-      if(verbose) cat(sprintf('%s %s %s %s \n', param, i, manage, j))
+      if(verbose) {
+        cat(sprintf('%s %s %s %s \n', unlist(paste(param)), i, manage, j))
+      }
       
-      predict_BI_obj[[j]] <- mclapply(1:15, function(k) {
+      predict_BI_obj[[j]] <- lapply(1:15, function(k) { #mclapply(1:15, function(k) {
           
         predict_BI_obj_jk <- vector('list', 2)
           
         load(sprintf('%s/%s_%s_%s.rda', dir, manage, j, k))
           
-        predict_BI_obj_jk[[1]] <- ((plogis(predict(earth_BI_obj_ijk[[1]], 
-          inputs[[manage]])) - .001) / .998)
+        predict_BI_obj_jk[[1]] <- plogis(predict(earth_BI_obj_ijk[[1]], 
+          inputs[[manage]]))
           
         predict_BI_obj_jk[[2]] <- sapply(seq_along(earth_BI_obj_ijk[[2]]), 
           function(REP) {
-            ((plogis(predict(earth_BI_obj_ijk[[2]][[REP]], 
-              inputs[[manage]])) - .001) / .998)
+            plogis(predict(earth_BI_obj_ijk[[2]][[REP]], inputs[[manage]]))
             })
           
         return(predict_BI_obj_jk)
         
-      }, mc.cores=5)
+      } ) #,mc.cores=5)
               
     }
     
