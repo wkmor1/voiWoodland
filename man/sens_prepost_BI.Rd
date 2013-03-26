@@ -12,7 +12,7 @@ sensitivity_BI(dir, newdata, manage, param, n, verbose = FALSE)
   \item{dir}{character string. Path to where Box Ironbark \code{\link{earth}} models produced by \code{\link{earth_BI}} are stored.}
   \item{newdata}{list. Input data to predict Box Ironbark output to. Must be \code{\link{BI_input}} or in the same form.}
   \item{manage}{character string. Which management strategy to test sensitivity of a parameter for. Must be one of 'BIW', 'BIMan' or 'BIEco'.}
-  \item{param}{character string. Which parameter to test sensitivity for. Must be one of the column names of the matrices that make up \code{\link{BI_input}}.}
+  \item{param}{character string. Which parameters to test sensitivity for. Must be one or more of the column names of the matrices that make up \code{\link{BI_input}}.}
   \item{n}{integer. The number of values of a parameter or preposterior distributions to produce with which to test sensitivity.}
   \item{verbose}{logical. If \code{TRUE} then stage of analysis is printed to screen.}
 }
