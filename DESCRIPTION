@@ -1,11 +1,11 @@
 Package: WKMorrisPhD2012
 Type: Package
 Title: Learning and planning for vegetation management
-Version: 0.1
-Date: 2012-06-19
+Version: 0.2
+Date: 2013-07-03
 Author: William K. Morris
 Maintainer: William K. Morris <wkmor1@gmail.com>
-Description: The PhD project of William K. Morris commenced in 2012. Chapter 1, Value of information analysis for Box-Ironbark Forests and Woodland management. Vegetation is often managed under uncertainty. Experimentation and monitoring can reduce uncertainty and therefore allow management decisions with greater expected benefits. However, the decision to experiment or monitor at all is only rational if the expected net gain is greater than the cost of sampling. A value of information analysis can a priori assess the efficacy of seeking to reduce uncertainty via sampling. I performed a value of information analysis for Box-Ironbark Forests and Woodland management in central Victoria. This analysis reveals whether to experiment and monitor to reduce uncertainty in a system model, as well as which aspects of model uncertainty are most cost-effective to address.
+Description: The PhD project of William K. Morris commenced in 2012. Chapter 1, Value of information analysis for Box-Ironbark Forests and Woodland management. Vegetation is often managed under uncertainty. Experimentation and monitoring can reduce uncertainty and therefore allow management decisions with greater expected benefits. However, the decision to experiment or monitor at all is only rational if the expected net gain is greater than the cost of sampling. A value of information analysis can a priori assess the efficacy of seeking to reduce uncertainty via sampling. I performed a value of information analysis for Box-Ironbark Forests and Woodland management in central Victoria. This analysis reveals whether to experiment and monitor to reduce uncertainty in a system model, as well as which aspects of model uncertainty are most cost-effective to address. Chapter 2, 
 Depends:R (>= 2.15.1), earth (>= 3.2-0)
 License: Unlimited
 URL: http://wkmor1.wordpress.com/
