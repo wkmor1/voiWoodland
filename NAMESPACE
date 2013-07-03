@@ -1,3 +1,4 @@
 import(earth)
 import(parallel)
+import(akima)
 exportPattern("^[^\\.]")
