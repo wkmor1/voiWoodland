@@ -1,9 +1,9 @@
-evpi_BI <- function(BI_output, n) {
+evpi_BI <- function(BI_output, n, max_et=.2) {
 
-  init <- c(1/3, .1)
+  init <- c((1 - max_et) / 2, max_et / 2)
 
   ui <- rbind(c(1, 0), c(0, 1), c(-1, 0), c(0, -1), c(-1, -1))
-  ci <- c(0, 0, -1, -.2, -1)
+  ci <- c(0, 0, -1, -max_et, -1)
 
   e_max <- constrOptim(init, 
     function(x) {

@@ -1,8 +1,8 @@
-sens_prepost_BI <- function(dir, newdata, manage, param, n, verbose=FALSE) {
+sens_prepost_BI <- function(dir, newdata, manage, param, n, size=1000, px=FALSE, verbose=FALSE) {
   
   sensitivity_BI_obj <- vector('list', n)
     preposts <- lapply(param, 
-      function(x) pre_posterior(newdata[[manage]][, x], n, 1000)
+      function(x) pre_posterior(newdata[[manage]][, x], n, size)
     )
     
   for (i in seq_len(n)) {
