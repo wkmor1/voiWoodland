@@ -1,4 +1,4 @@
-pre_posterior <- function(x, n, size) {
+pre_posterior <- function(x, n, size, px=FALSE) {
   
   eta <- sum(x == 0) / length(x)
   
@@ -32,9 +32,16 @@ pre_posterior <- function(x, n, size) {
     return(x.star)
   }
   
-  ans <- lapply(p, 
-    function(y) update(phi=y, x=x, size=size, eta=eta, shape=shape))
+  if (px) {
+    ans <- lapply(p, 
+      function(y) rep(y, n))
+  } else {
+    ans <- lapply(p, 
+      function(y) update(phi=y, x=x, size=size, eta=eta, shape=shape))
+  }  
+  
   attr(ans, 'probability') <- p
+  
   return(ans)
   
 }
