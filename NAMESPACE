@@ -1,4 +1,2 @@
-import(earth)
-import(parallel)
-import(akima)
+importFrom(earth, 'earth')
 exportPattern("^[^\\.]")
