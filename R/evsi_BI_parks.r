@@ -1,15 +1,15 @@
 evsi_BI_parks <- function(BIW=NULL, BIEco=NULL, BI_output) {
-  
+
   init <- .9
 
-  e_max <- optim(init, 
+  e_max <- optim(init,
     function(x) {
       obj_fun_parks(x, BIW=NULL, BIEco=NULL, BI_output=BI_output)},
     NULL, lower=.8, upper=1, control=list(fnscale=-1), method="Brent")
 
   max_k <- mclapply(seq_len(max(length(BIW), length(BIEco))), 
     function(k) {
-      optim(init, 
+      optim(init,
         function(x) {
           obj_fun_parks(x,
             BI_output=BI_output,
@@ -18,5 +18,5 @@ evsi_BI_parks <- function(BIW=NULL, BIEco=NULL, BI_output) {
       }, mc.cores=5)
  
   return(list(e_max, max_k))
-  
+
 }
