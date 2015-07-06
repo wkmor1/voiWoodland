@@ -1,0 +1,871 @@
+\documentclass{article}
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{voiWoodland}
+%\VignetteEncoding{UTF-8}
+\usepackage{setspace}
+\usepackage{geometry}
+\geometry{tmargin = 2.5cm, bmargin = 2.5cm, lmargin = 2.5cm, rmargin = 2.5cm}
+\usepackage[labelsep = none, textformat = empty]{caption}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[nomarkers]{endfloat}
+\AtBeginDelayedFloats{\linespread{2}}
+\usepackage[symbol]{footmisc}
+\setcounter{secnumdepth}{0}
+\usepackage{url}
+\usepackage[citestyle = authoryear, bibstyle = voiWoodland, natbib = true,
+  maxcitenames = 3, maxbibnames = 999, uniquelist = false, sortcites = true,
+  backend = bibtex]{biblatex}
+\addbibresource{voiWoodland.bib}
+\usepackage{lineno}
+\linenumbers
+\setlength{\parindent}{0pt}
+\makeatletter
+\renewcommand{\maketitle}{\bgroup\setlength{\parindent}{0pt}
+\begin{flushleft}
+  \@title
+
+  \@author
+\end{flushleft}\egroup
+}
+\makeatother
+
+\begin{document}
+<<setup, include = FALSE, cache = FALSE, message = FALSE>>=
+library(knitr)
+opts_chunk$set(fig.align = 'center', dev = 'tikz', fig.width = 2.79528,
+  fig.height = 2.79528, fig.show = 'as.is', cache = TRUE, par = TRUE, tidy = FALSE,
+  out.width = '\\textwidth')
+options(replace.assign = TRUE, width = 90, tikzDefaultEngine = 'xetex')
+@
+\title{\huge{Value of information for woodland management: What you can do, tell's you what you need to know}\\
+\vspace{1em}\Large{\textit{Running title}: VOI for woodland management}\vspace{1em}}
+\author{
+William K. Morris$^{1,2}$ (wkmor1@gmail.com)\footnote{Correspondence author. Phone: +613 8 344 8086, Fax: +61 3 9347 5460},\\
+Peter A. Vesk$^{1,2}$ (pvesk@unimelb.edu.au),\\
+Michael C. Runge$^{2,3}$ (mrunge@usgs.gov)
+}
+\date{}
+\maketitle
+1. Quantitative and Applied Ecology Group, School of BioSciences, The University of Melbourne, Vic 3010, Australia.\\
+2. The Australian Research Council Centre of Excellence for Environmental Decisions.\\
+3. United States Geological Survey, Patuxent Wildlife Research Center, Laurel, MD 20708, United States.\\
+\textit{\large{Word count}}\\
+Total: 6570\\
+Summary: 320\\
+Main text: 5000\\
+Acknowledgements: 50\\
+References: 700\\
+Table legends: 0\\
+Figure legends: 500\\
+Number of Tables: 0\\
+Number of Figures: 3\\
+Number of References: 37
+\vspace{22em}\\
+\normalsize
+\newpage
+\begin{spacing}{2}
+
+\section{Summary}
+\begin{enumerate}
+\item When managing in the face of uncertainty, monitoring or experimentation can facilitate decisions yielding greater expected benefits. But it is only rational to monitor or experiment if the expected net benefit of reducing uncertainty is positive.
+\item A value of information analysis can reveal the expected benefit of reducing uncertainty. We performed value of information analyses for models of Box-Ironbark Forest and Woodland management in central Victoria, a complex system with high structural and parametric uncertainty. These analyses could help reveal whether to experiment and monitor to reduce uncertainty in a system model, which aspects of model uncertainty would be most important to address and what sampling strategies would be most cost-effective to undertake.
+\item We found that the outcome of forest management was much more sensitive to some model parameters than others, and the greatest value of information tended to come from reducing uncertainty about the parameters to which the outcomes were most sensitive.
+\item Among candidate sampling strategies, we found that those that achieved the greatest cost effectiveness focused monitoring on particular aspects of the system itself or particular management actions. We also found that the value of information was sensitive to the set of management options available to the decision-maker. As the number of options increased, the value of information for some parameters increased, while for others it remained more or less constant.
+\item \textit{Synthesis and applications}.
+Monitoring and experimentation to reduce uncertainty can lead to better decision making for vegetation management.  We demonstrate how to apply a value of information analysis for a complex, highly-parameterised system model. We show how such analyses can be performed for a continuous model of a decision problem. Our analysis shows it is probably more cost-effective to monitor certain aspects of the system and employ a targeted sampling design than monitor with a view to reducing uncertainty in all dimensions of model space simultaneously. We also found that the optimal focus for learning can change if the set of available management actions changes.
+\end{enumerate}
+\textbf{Keywords:} Bayesian decision analysis, cost-benefit analysis, thinning, expert elicitation, multivariate adaptive regression splines, sensitivity analysis, state and transition model, uncertainty.
+\newpage
+
+\section{Introduction}
+Ecosystems are typically managed under uncertainty. Experimentation and monitoring can reduce uncertainty and facilitate management decisions with greater expected benefits. The decision to experiment or monitor at all is only rationally justifiable, however, if the expected benefit when making a decision with new information, rather than without, is greater than the cost of learning. Determining the value of information allows the calculation of this benefit \citep{Raiffa1968}. Value of information theory is a set of decision theoretic tools that have previously been applied to decision problems in economics, medicine, engineering and other domains \citep{Dakins1999, Yokota2004, Claxton2008, Wu2013}.
+
+Sometimes it is unclear whether monitoring is necessary \citep{Mcdonaldmadden2010}. With the value of information toolset, a decision analyst can assess what to monitor, how much to monitor and even whether monitoring is justified at all. Compared with other fields such as operations research and medicine, ecology and natural resource management have been slower to adopt value of information analyses for decision making, although recently, some examples have begun to appear in the literature (e.g., \cite{Polasky2001, Moore2011, Runge2011, Runting2013}). Most examples have focused on the application of value of information to discrete model problems (e.g., \cite{Moore2012}). Furthermore, ecological decision problem solving has tended to focus on models of population dynamics \citep{Runge2011, Canessa2015, Johnson2014, Maxwell2015}. In contrast, communities or ecosystems have rarely been the focus of value of information analyses. This paper demonstrates how value of information analyses can be applied to a complex continuous system model to better manage an ecological community.
+
+\subsection{Value of information}
+A value of information analysis can assess the benefit of reducing epistemic uncertainty before making a decision. The expected value of perfect information (EVPI) quantifies the expected performance gain if all uncertainty is resolved prior to committing to action \citep{Raiffa1968}. The EVPI is the upper bound of expected performance improvement and can identify the amount of resources worth investing to resolve uncertainty \citep{Runge2011}. While EVPI provides a value for complete reduction of uncertainty, the partial value of perfect information, EVPXI, and the value of sample information, EVSI, can quantify the performance gain if uncertainty is only partially resolved \citep{Ades2004}. EVPXI is the value of knowing the exact value of one more (but not all) parameters in a model, while EVSI is the value of partially reducing uncertainty of one or more model parameters. In this paper, we refer to these methods collective as the Expected Value of Information (EVI).
+
+Here we briefly define the general form of an EVI analysis. For a more detailed description of the derivation of EVI and its variants, see the seminal text of \citet{Raiffa1968} and for more recent treatments see \citet{Yokota2004} and \citet{Williams2011}. The EVI is, in essence, the difference between the expected value of making an optimal decision without reducing uncertainty and the expected value of making an optimal decision after uncertainty has been reduced. The most general form of EVI is EVSI, which is:
+\begin{equation}
+\mathrm{EVSI}\equiv\mathbb{E}_{z|e}\mathrm{max}_a\mathbb{E}_{\theta|z}u(a,\theta)-\mathrm{max}_{a}\mathbb{E}_{\theta_0}u(a,\theta_0)
+\label{EVSI}
+\end{equation}
+where $e$ is an experiment (or monitoring program) from a set of possible $E$ experiments that produces a random outcome $z$ realized from possible outcomes $Z$. The set of experiments includes not experimenting at all. An action, $a$, of possible actions, $A$, is taken, which results in an outcome that depends on an uncertain set of parameters, $\theta$, from a state space $\Theta$, where $\theta_0$ is the result of not experimenting at all. The function $u$ is the utility of the outcome associated with taking action $a$ when the true set of parameters is given by $\theta$. The first term in equation \ref{EVSI} is the expected utility given an experiment is performed and the action is taken that maximises the expected utility given the average (posterior) state of knowledge, averaged over all possible experimental outcomes. Note that this first term is a Bayesian preposterior utility, because it uses the prior to average over all the possible posterior distributions that could arise out of an experiment. The second term is the expected utility of choosing the action that maximises the expected performance given the prior knowledge of the system parameters. Both EVPI and EVPXI can be thought of in terms of EVSI. EVSI will approach EVPXI if one parameter is sampled and the sample-size approaches infinity. Likewise if all model parameters are sampled and the sample-size approaches infinity, then EVSI will approach EVPI.
+
+\subsection{Box Ironbark Forest and Woodland management}
+The Box Ironbark Forest and Woodland (BIFAW) region covers approximately 250,\,000\,ha of central Victoria, Australia. The BIFAW are dry plant communities that occur on low-fertility soils and in a semi-arid to temperate climate. Much of the pre-European stands of BIFAW were cleared for agriculture and gold mining. Most of the current extent is highly fragmented regrowth. These regrowth stands are typically missing key ecosystem components such as large, hollow-bearing trees and a diverse understory shrub layer. Tree species found in BIFAW include Grey Box (\textit{Eucalyptus microcarpa}), Red Box (\textit{E. polyanthemos}), Long Leaf Box (\textit{E. goniocalyx}), Yellow Box (\textit{E. melliodora}), Red Ironbark (\textit{E. tricarpa}), Red Stringybark (\textit{E. macrorhyncha}) and Yellow Gum (\textit{E. leucoxylon}). The BIFAW supports important habitat for three Victorian listed threatened taxa: the Brush-tailed Phascogale (\textit{Phascogale tapoatafa}), Powerful Owl (\textit{Ninox strenua}) and Regent Honeyeater (\textit{Xanthomyza phrygia}) \citep{Tzaros2005}. The latter is also a federally listed endangered species. Regent Honeyeaters are threatened because they rely on large trees for foraging and nesting \citep{Menkhorst1999}.
+
+In 1996 the state government of Victoria commissioned an investigation into an appropriate system for the protection and management of BIFAW. As a direct result, over 200,\,000\,ha of BIFAW were gazetted as national park and other protected areas. A key recommendation of the report was that `ecological thinning' be part of the management strategy of the BIFAW \citep{Pigott2009}. The report recommended a program of ecological thinning be undertaken as part of an ecological management strategy to assist the development of a forest structure ultimately dominated by large diameter trees in the new parks and reserves \citep{ECC2001}. `Ecological thinning' is the active reduction of stem density to improve forest health, while retaining some fallen timber to improve habitat for plants and animals \citep{Cunningham2009}. In 2003 the body in charge of BIFAW park management, Parks Victoria, established an `ecological thinning trial'. The aim of the trial was to investigate whether `ecological thinning' (hereby `thinning') could be used to restore structural diversity of habitat types and the functioning and persistence of key communities and species populations \citep{Pigott2010}.
+
+\subsection{State and transition models of Box Ironbark Forest and Woodland}
+\citet{Czembor2009} built a suite of simulation models of BIFAW dynamics, parameterised through expert elicitation using methods adapted from \citet{Morgan1990}. Their BIFAW state and transition models predict the proportions of a model landscape in four states, including the state most desired by land-managers, mature, low-density woodland. The models included three management scenarios, no management/natural disturbance only (NM), a scenario of limited harvest/firewood removal (HF), and thinning (ET). In analysing the variation among models which included three components of uncertainty, \citet{Czembor2011} found that between-expert uncertainty was the greatest contributor to total model uncertainty, followed by imperfect individual expert knowledge, then system stochasticity. In the case presented here we treated the opinions of a set of experts as a Bayesian prior distribution. Though a proven method of creating a prior \citep{Martin2005}, experts may not be needed in other circumstances where other information is available such as the results of a previous work \citep{Mccarthy2005}, pilot studies \citep{Morris2013}, or a general model \citep{Morris2015}.
+
+\subsection{Study objectives}
+Management of highly uncertain systems such as the BIFAW can benefit from investment in learning about the system itself. But in complex systems with many parameters and multiple state variables changing at different rates, which aspects of the system should we learn about? To answer this question we undertook an expected value of information analysis. We first conducted a sensitivity analyses for the transition probability parameters that constitute the BIFAW models of \citet{Czembor2011}. For those parameters to which the management outcomes were most sensitive we calculated the expected partial value of information to determine which parameters have the greatest value for learning. We also analysed a set of sampling strategies designed to reduce uncertainty about multiple parameters by focusing on transitions in and out of particular system states. We performed the analyses from the perspective of two different management agencies and tested the effect of changing the constraints on the management actions.
+
+\section{Materials and methods}
+\subsection{Decision problem}
+The fundamental objective of the BIFAW region managers are to ensure the persistence of key, functioning communities and species populations of the region. Managers have determined that the means of achieving these objectives is to maximise the proportion of the landscape in a mature-low density state which supports key habitat components such as hollow bearing trees and a diverse shrubby understory. They have three management actions available to achieve this objective: no management/allow natural disturbance only, allow limited harvest/firewood removal and thinning. There are two management agencies operating in the BIFAW who have different operating constraints that determine which management actions they can use in the parts of the BIFAW they manage (see below).
+
+\subsection{Approximating BIFAW state and transition model output with multivariate adaptive regression splines}
+The system model we used to make predictions of BIFAW management decision outcomes was a set of multivariate adaptive regression splines (MARS) \citep{Friedman1991} fit to simulation data from the state and transition models of \citet{Czembor2011}. We chose to represent the state and transitions using MARS rather than run further VDDT simulations as the latter would be computationally infeasible given the large number of model runs needed for the analyses that follow.
+
+The state and transition models predicted the proportion of land in four vegetation states at yearly intervals over a 150 year time horizon. The four states in the models were high-density regrowth (HDRG), low-density regrowth (LDRG), mature high-density woodland (MHDW), and mature low-density woodland (MLDW). The transition probabilities among these states for each of the three management actions were parameterized by five experts \citep{Czembor2009}. Transition probabilities were elicited for a set of causal agents (see Table 1, \cite{Czembor2009}). Combining transition types, management scenarios, and causal agents, there were 169 different transition probability parameters elicited from each of the five experts. There were other parameter types included in the state and transition models, but for simplicity we focus solely on the transition probabilities. For each parameter, the experts individually provided upper and lower plausible bounds. Given these bounds and assuming they represented the 80, 90 and 95\% credible intervals of underlying beta distributions, 25 random samples were drawn for each parameter, assuming each of the credible intervals, from those assumed distributions. \citet{Czembor2011} used the 375 (5 experts, times 3 credible intervals, times 25 random samples) as alternative parameterizations to simulate BIFAW forest dynamics with the software package Vegetation Dynamics Development Tool (VDDT) \citep{ESSA2007}.
+
+Here we used the output from ten stochastic VDDT simulations for each of the 375 parameterizations to fit MARS models for each management action separately. For each of the MARS models the response (n=3750) was the proportion of the model landscape in the MLDW state with the VDDT parameters used as the predictors. To capture the modelled stochasticity of the state and transition models, each MARS model was bootstrapped 9 times using standard bootstrap sampling (i.e., a random sample, with replacement, of the dataset). All analyses were done using the statistical computing language R version 3.0.2 \citep{R2013} with the MARS models fit using the software package `earth' version 3.2-6 \citep{Milborrow2013}.
+
+\subsection{Sensitivity analysis}
+We conducted a sensitivity analysis to reveal which parameters affect the outcome of management (proportion of land in the desired, mature low-density woodland, state after 150 years) and therefore which parameters are the best candidates for learning and reducing uncertainty. For each candidate parameter we used the bootstrapped MARS models to predict the outcome of the relevant management scenario with the focal parameter iteratively fixed at ten equidistant intervals across the plausible range previously specified by the experts, with all other parameters having the uncertainty as originally specified by the experts. We chose the range of median predicted proportion of the MLDW state as the measure of sensitivity. Those focal parameters to which the outcome was most sensitive had greater ranges of median predictions when the focal parameter was changed. Using the results of the sensitivity analyses we were able to rule out relatively unimportant parameters and exclude them from further analysis. As a cutoff we only used parameters in the value of information analyses that had sensitivity of .01 or greater. In other words, changing those parameters could result in at least a 1\% change in the area expected in the desired state after 150 years.
+
+\subsection{Expected value of information}
+\subsubsection{Preposterior analysis}
+To calculate EVSI for each candidate parameter requires a Bayesian preposterior analysis (Figure \ref{fig:plot_prepost_eg}). The aim of a preposterior analysis is to predict the value of new information before it is collected, by generating a set of plausible posterior distributions that could be arrived at after sampling, and integrating over all possible samples. Preposterior analysis requires five steps: repeated random sampling from a prior distribution on the parameters ($\theta^\prime$), simulating experimental outcomes ($z$) assuming samples from the prior are the true state of the system, calculating a posterior distribution for the parameters ($\theta^{\prime\prime}$) using Bayes’s rule and considering the experimental outcomes as observations that update the prior, determining the action with the highest expected utility in the face of any remaining uncertainty, and integrating the posterior utilities over the prior distribution \citep{Berger1985}.
+
+We performed a preposterior analysis for our set of candidate transition probabilities. To calculate the posterior distributions, we considered that the expert-derived estimates of each parameter (transition rate) could be represented by zero-inflated beta distributions. The zero-inflation arises because some experts disagree whether or not some transitions occur at all. Therefore to calculate the preposterior distribution, we assumed the following: a transition event may occur with probability $p$, but there is a non-zero belief, $\phi$, that $p = 0$. The prior belief in $p$ can therefore be described by a zero-inflated beta distribution, $\mathrm{bi}_0$ with parameters $\alpha$ and $\beta$ and a probability density function given by,
+
+\begin{equation}
+\mathrm{bi}_0(p;\alpha,\beta,\phi)=
+\begin{cases}
+    \phi,& \text{if } p = 0\\
+    (1 - \phi)\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}p^{\alpha-1}(1-p)^{\beta-1}, & \text{if } p \in (0,1)
+\end{cases}
+\end{equation}
+
+If we perform an experiment, $e$, such that we monitor 1000\,ha of BIFAW, and observe $m$ hectare transitions, then if $m > 0$ we eliminate the possibility that $p = 0$ , thus conclude $\phi = 0$ and update the posteriorprobability density function to
+
+\begin{equation}
+Beta(p;\alpha+m,\beta+(n-m))=\frac{\Gamma(\alpha+m+\beta+(n-m))}{\Gamma(\alpha+m)\Gamma(\beta+(n-m))}p^{\alpha+m-1}(1-p)^{\beta+(n-m)-1}.
+\end{equation}
+
+On the other hand, if we observe $m = 0$ then we update the belief in $p$ by retaining the prior value of $\phi$. The posterior distribution of $p$ remains a zero-inflated beta distribution where,
+
+\begin{equation}
+\mathrm{bi}_0(p;\alpha,\beta+n,\phi)=
+\begin{cases}
+    \phi,& \text{if } p = 0\\
+    (1 - \phi)\frac{\Gamma(\alpha+\beta+n)}{\Gamma(\alpha)\Gamma(\beta+n)}p^{\alpha-1}(1-p)^{\beta+n-1}, & \text{if } p \in (0,1).
+\end{cases}
+\end{equation}
+
+We derived the prior parameters $\alpha$ and $\beta$ from the expert elicited sample distributions via moment matching. For each transition, the parameter $\phi$ was the proportion of experts who believed that the given transition could not occur. For each parameter we generated 100 samples and calculated 100 posterior distributions.
+
+We prefer this formulation of the updating process over other possible methods of formualting a zero-inflated beta posterior, where the updater might learn about $p$ and $\phi$ simulatenously. We feel it reflects the perspective of the expert elicitor who has no prior information that would give them unequal belief in the experts. Obtaining new information shouldn't change the equality of expert knowledge, it should just change the belief of the experts themselves.
+
+\subsubsection{Objective function}
+We defined a simple objective function based on the strategic aim of the BIFAW thinning trial, with two different sets of constraints. The first constraint set was for a management agency that could allow the limited harvest/firewood removal strategy within the BIFAW, while the second rules out this possibility and only allows for either no management/protection or thinning. The first constraint set represents the operation of an agency such as the Victorian Department of Environment, Water and Planning, who still manage much of the BIFAW on public land not gazetted in 2002 or previously. The latter however, is more akin to an agency such as Parks Victoria, who would be unlikely to permit the harvest strategy in the reserve system they manage. For both constraint sets the objective was to maximise the proportion of the BIFAW in the desired, mature low-density woodland state after 150 years. Both constraint sets included the constraint that the thinning option could only be applied to a maximum of 20\% of the BIFAW landscape. However we also tested the sensitivity of the results to this constraint across a range of 5\% to 90\%.
+
+\subsubsection{Optimal allocation of management actions}
+Given the objective and constraint set, we used a simplex algorithm to perform a constrained optimization \citep{Nash1990} that would find the allocation of the landscape to each management action that maximises the mature low-density woodland state after 150 years. However, the model as implemented can only predict the outcome of applying one management strategy per management unit and assumes that unit is managed the same way for the duration of the model run. The results may change if the management strategy could adapt to the state the unit is in at any given timestep.
+
+\subsubsection{Calculating EVI}
+Calculating the EVSI for each parameter required a set of MARS model predictions of MDLW proportion corresponding to the 100 posterior distributions for each management action. For each posterior distribution we used the previously fitted MARS models to predict the outcome of management. Predictions were made using 375 new samples from the posterior distribution of the focal parameter. For all other parameters, samples were drawn from their prior distributions. The remaining step of the preposterior analysis is to calculate the expected utility over the posterior distributions. That is, for a given posterior, optimise the expected value of each possible allocation and identify the optimal allocation. Then the utility of the best action is integrated over all possible parameter values via the Monte Carlo sampling of  the prior distribution.
+
+Calculating the EVSI for each parameter is then simply a matter of applying the objective function and equation \ref{EVSI} to the preposterior predictions and equivalent predictions made under the prior. The objective function applied to the preposterior predictions corresponds to the utility, $u(a,\theta)$, of the first term in equation \ref{EVSI} while the  utility of the second term, $u(a,\theta_0)$, corresponded to applying the objective function with constraint sets to the predictions made under the joint prior distribution.
+
+The values we report here are values of sample information assuming a thousand samples. In the results, we describe these values as EVPXI because the sample number assumed was great enough that uncertainty in the parameters sampled was effectively completely resolved. While it would be interesting to reduce the sample size for the preposterior analysis and calculate the EVSI across a range of sample-sizes this was unfortunately impractical for this case-study. The sample-sizes at which EVSI approaches EVPXI for a given parameter were always relatively low ($\approx10$) and due to the imprecision of the MARS models at low sample-sizes EVSI would unreliable in such cases.
+
+In addition to calculating EVPXI for resolution of uncertainty about each parameter individually, we calculated EVPXI for seven alternative sampling designs that reduced uncertainty about multiple parameters by monitoring them simultaneously. Four sampling designs focused on the top two most valuable parameters in the single parameter calculation of EVPXI, beginning in each of the four system states. The other three sampling designs focused on the two most valuable parameters for each management action. Finally, we calculated the EVPI to assess the upper bound on the value of sampling to which to compare the EVPXI of parameters and parameter combinations.
+
+\section{Results}
+<<load_packages, echo = FALSE, message = FALSE>>=
+library(voiWoodland)
+library(knitr)
+@
+
+\subsection{Multivariate adaptive regression splines}
+<<earth_model, include = FALSE, eval = FALSE>>=
+data(BI_input)
+dir.create('earth_BI_objs')
+earth_BI(BI_output = BI_output, BI_input = BI_input, n_boot = 9,
+  dir = 'earth_BI_objs', verbose = TRUE)
+@
+
+<<uncor_input, echo = FALSE>>=
+data(BI_input)
+data(BI_output)
+UC_in <- lapply(BI_input,
+  function(x) apply(x, 2, function(y) y[sample(seq_along(y))]))
+
+UC_in <- lapply(UC_in,
+  function(x) apply(x, 2, function(y) {
+    if (diff(range(y)) <= 1 & sum(abs(y)) != max(y)) {
+      pre_posterior(y, 1, 0)[[1]]} else {y}}))
+@
+
+<<earth_BI_preds, include = FALSE, eval = FALSE>>=
+earth_BI_preds <- predict_BI(dir = 'earth_BI_objs', UC_in, verbose = TRUE)
+
+save(earth_BI_preds, file = 'earth_BI_preds.rda')
+@
+
+<<pearsons_r, echo = FALSE, message = FALSE>>=
+data(BI_output)
+load(system.file('extdata/earth_BI_preds.rda', package = 'voiWoodland'))
+
+BI_output_ <- do.call(rbind,
+  lapply(c("LDW", "HDW", "MAT"), function(x) subset(BI_output, SSAbbr == x))
+)
+
+BI_output_ <- do.call(rbind,
+  lapply(c("BIW", "BIMan", "BIEco"),
+    function(x) subset(BI_output_, CTAbbr == x)
+  )
+)
+
+BI_output_ <- cbind(BI_output_, mars = unlist(earth_BI_preds))
+
+pearsons_r <- round(min(cor(apply(BI_output_[, 5:6], 2,
+  function(x) tapply(x, rep(seq_len(nrow(BI_output) / 10), each = 10), mean)
+  ))), 2)
+@
+
+Refitting the VDDT output data to the expert-elicited model parameters using MARS produced broadly similar predictions to those from the original state-and-transition models. For all management scenarios, after starting from an initial dominance of the high-density regrowth state, the other three states all increased in cover, leading to a less skewed distribution after 80 to 150 years. The variance of the mean MARS predictions was similar for both MARS predictions and the original VDDT model predictions (Pearson's r = \Sexpr{pearsons_r}).
+
+\subsection{Sensitivity analysis}
+The proportion of mature low-density woodland after 150 years was sensitive to 74 of the 169 transition probabilities. Of these parameters, 43 qualified for further analyses (i.e., $>1$\%  change in the area expected in the desired state after 150 years). The outcome of management was most sensitive to the uncertainty in parameters associated with coppicing and the effect of drought. Changes in these transition probabilities could affect the outcome of management by more than 10 percentage points. In contrast, most of the other parameters to which the amount of mature low-density woodland was sensitive changed the outcome by less than 5 percentage points.
+
+<<sens_BI, include = FALSE, eval = FALSE>>=
+dir.create("sensitivity_BI_objs")
+for (i in names(BI_input)) {
+  for (j in colnames(BI_input[[i]])) {
+    sens_BI <- sensitivity_BI(
+      dir = 'earth_BI_objs',
+      BI_input, i, j, 10, verbose = TRUE)
+    save('sens_BI',
+      file = sprintf('sensitivity_BI_objs/sens_%s.rda', j))
+  }
+}
+@
+
+<<param_sens, echo = FALSE, eval = FALSE>>=
+param_sens <- matrix(NA, ncol = 60, nrow = 220)
+sens_files <- list.files('sensitivity_BI_objs')
+rownames(param_sens) <- gsub('sens_', '', gsub('.rda', '', sens_files))
+colnames(param_sens) <- paste(rep(c('MAT', 'HDW', 'LDW', 'REG'), each = 15),
+  1:15, sep = '')
+
+for (i in seq_along(sens_files)) {
+  load(sprintf('sensitivity_BI_objs/%s', sens_files[i]))
+  for (j in 1:15) {
+    param_sens[i, j] <- diff(range(sapply(1:10,
+      function(x) median(unlist(sens_BI[[x]]$MAT[[j]])))))
+    param_sens[i, j + 15] <- diff(range(sapply(1:10,
+      function(x) median(unlist(sens_BI[[x]]$HDW[[j]])))))
+    param_sens[i, j + 30] <- diff(range(sapply(1:10,
+      function(x) median(unlist(sens_BI[[x]]$LDW[[j]])))))
+    param_sens[i, j + 45] <- diff(range(sapply(1:10,
+      function(x) median(pmax(0, 1 - unlist(sens_BI[[x]]$MAT[[j]]) -
+      unlist(sens_BI[[x]]$LDW[[j]]) - unlist(sens_BI[[x]]$HDW[[j]]))))))
+  }
+}
+@
+
+<<sens_prepost_BI, include = FALSE, eval = FALSE>>=
+dir.create('sens_prepost_BI_objs')
+for (i in names(BI_input)) {
+  for (j in
+    intersect(colnames(BI_input[[i]])[grep('Probab', colnames(BI_input[[i]]))],
+      rownames(param_sens)[param_sens[, 'MAT15'] > .01])
+    ) {
+    sens_pp_BI <- sens_prepost_BI(dir='extdata/earth_BI_objs', UC_in, i, j, 100,
+      verbose = TRUE)
+    save('sens_pp_BI',
+      file = sprintf('sens_prepost_BI_objs/sens_pp_%s.rda', j))
+    rm(sens_pp_BI)
+  }
+}
+@
+
+<<param_sens_pp, echo=FALSE, eval = FALSE>>=
+sens_pp_files <- list.files('sens_prepost_BI_objs')
+
+param_sens_pp <- matrix(NA, ncol = 60, nrow = length(sens_pp_files))
+rownames(param_sens_pp) <- gsub('sens_pp_', '', gsub('.rda', '', sens_pp_files))
+colnames(param_sens_pp) <- paste(rep(c('MAT', 'HDW', 'LDW', 'REG'), each = 15),
+  1:15, sep = '')
+
+for (i in seq_along(sens_pp_files)) {
+  load(sprintf('sens_prepost_BI_objs/%s', sens_pp_files[i]))
+  for (j in 1:15) {
+    param_sens_pp[i, j] <- diff(range(sapply(1:10,
+      function(x) median(unlist(sens_pp_BI[[x]]$MAT[[j]])))))
+    param_sens_pp[i, j + 15] <- diff(range(sapply(1:10,
+      function(x) median(unlist(sens_pp_BI[[x]]$HDW[[j]])))))
+    param_sens_pp[i, j + 30] <- diff(range(sapply(1:10,
+      function(x) median(unlist(sens_pp_BI[[x]]$LDW[[j]])))))
+    param_sens_pp[i, j + 45] <- diff(range(sapply(1:10,
+      function(x) median(pmax(0, 1 - unlist(sens_pp_BI[[x]]$MAT[[j]]) -
+      unlist(sens_pp_BI[[x]]$LDW[[j]]) - unlist(sens_pp_BI[[x]]$HDW[[j]]))))))
+  }
+}
+
+sens_params_pp <- row.names(param_sens_pp[param_sens_pp[, 'MAT15'] > 0, ])
+save(param_sens_pp, file = 'param_sens_pp.rda')
+save(sens_params_pp, file = 'sens_params_pp.rda')
+@
+
+<<evsi_BI, include = FALSE, eval = FALSE>>=
+dir.create('evsi_BI_objs')
+load(system.file('extdata/sens_params_pp.rda', package = 'voiWoodland'))
+for (i in sens_params_pp) {
+  load(sprintf('sens_prepost_BI_objs/sens_pp_%s.rda', i))
+  if (gsub('.+given', '', gsub('then.+', '', i)) == 'BIW') {
+    evsi_BI_obj <- evsi_BI(BIW = sens_pp_BI, BI_output = earth_BI_preds)
+  }
+  if (gsub('.+given', '', gsub('then.+', '', i)) == 'BIMan') {
+    evsi_BI_obj <- evsi_BI(BIMan = sens_pp_BI, BI_output = earth_BI_preds)
+  }
+  if (gsub('.+given', '', gsub('then.+', '', i)) == 'BIEco') {
+    evsi_BI_obj <- evsi_BI(BIEco = sens_pp_BI, BI_output = earth_BI_preds)
+  }
+  cat('Done', i, '\n')
+  save(evsi_BI_obj, file = sprintf('evsi_BI_objs/evsi_%s.rda', i))
+}
+@
+
+<<evsi_BI_parks, include = FALSE, eval = FALSE>>=
+dir.create('evsi_BI_objs2')
+for (i in sens_params_pp) {
+  load(sprintf('sens_prepost_BI_objs/sens_pp_%s.rda', i))
+  if (gsub('.+given', '', gsub('then.+', '', i)) == 'BIW') {
+    evsi_BI_parks_obj <-
+      evsi_BI_parks(BIW = sens_pp_BI, BI_output = earth_BI_preds)
+    save(evsi_BI_parks_obj,
+      file = sprintf('evsi_BI_objs2/evsi_parks_%s.rda', i))
+    rm(evsi_BI_parks_obj)
+  }
+  if (gsub('.+given', '', gsub('then.+', '', i)) == 'BIEco') {
+    evsi_BI_parks_obj <-
+      evsi_BI_parks(BIEco = sens_pp_BI, BI_output = earth_BI_preds)
+    save(evsi_BI_parks_obj,
+      file = sprintf('evsi_BI_objs2/evsi_parks_%s.rda', i))
+    rm(evsi_BI_parks_obj)
+  }
+  cat('Done', i, '\n')
+}
+@
+
+<<evpi_calc, echo = FALSE>>=
+evpi_BI_obj <- calc_evi_BI(evpi_BI(BI_output = earth_BI_preds, 375))
+@
+
+<<evpi_parks_calc, echo = FALSE>>=
+evpi_BI_parks_obj <- calc_evi_BI(evpi_BI_parks(BI_output = earth_BI_preds, 375))
+@
+
+<<evsi_summary_BI, echo = FALSE>>=
+load(system.file('extdata/sens_params_pp.rda', package = 'voiWoodland'))
+load(system.file('extdata/param_sens_pp.rda', package = 'voiWoodland'))
+evsi_BI_summary <- sapply(sens_params_pp, function(x) {
+  load(system.file(sprintf('extdata/evsi_BI_objs/evsi_%s.rda', x),
+    package = 'voiWoodland'))
+  return(calc_evi_BI(evsi_BI_obj))
+  })
+@
+
+<<evsi_parks_summary_BI, echo = FALSE>>=
+load(system.file('extdata/sens_params_pp.rda', package = 'voiWoodland'))
+evsi_BI_parks_summary <- sapply(sens_params_pp[-grep('BIMan', sens_params_pp)],
+  function(x) {
+    load(system.file(sprintf('extdata/evsi_BI_objs2/evsi_parks_%s.rda', x),
+      package = 'voiWoodland'))
+    return(calc_evi_BI(evsi_BI_parks_obj))
+  })
+@
+
+\subsection{Optimal allocation with current knowledge}
+The optimal allocation of BIFAW management strategies, given the expert elicitation and the objective functions we apply here, is to allocate the maximum allowable to thinning (20\% of the state, or whichever percentage constraint is placed on the thinning option) and the remaining percentage to no management, while not applying the harvest management option at all. The expected performance of this optimal allocation, averaged over all posterior distributions, is 24\% cover of mature low-density woodland after 150 years, an increase of eight percentage points from the estimate of extant cover of this vegetation state (16\%).
+
+\subsection{Expected value of information}
+The EVPI is the upper bound of expected performance improvement and identifies how much it is worth investing to resolve all the uncertainty. For the first management setting, with three possible management strategies, the EVPI was approximately a 9 percentage point increase in the total cover of mature lower density woodland after 150 years. That is, the expected amount of the desired state would increase from an initial level of 16\% of the landscape to 33\% if the estate was managed with no uncertainty. Compared with the amount expected without resolving any uncertainty (24\%) resolving uncertainty could lead to over a doubling in the amount of added BIFAW in the desired state. Decreasing the management options by taking the harvest management option off the table decreased the value of perfect information to approximately 1.7 percentage points.
+
+Figure \ref{fig:EVSI_param_plot}a shows the top five most valuable parameters from the single parameter EVPXI analysis with the three management option scenario. The most valuable parameter was the transition from low to high density regrowth caused by coppicing given management under the harvest management option. The EVPXI for this parameter was 3 percentage points, meaning that on average, managers could expect to make a decision that would result in 3 percentage points more mature low-density woodland than if they hadn't learnt anything about this parameter. This was approximately one third of the EVPI. The parameters for the transition from low to high density regrowth caused by coppicing were three of the four most valuable, reflecting the high sensitivity of the outcome to the uncertainty in their prior probabilities.
+
+Sensitivity, as measured in the sensitivity analysis, was not a perfect predictor of EVPXI (pearson correlation $=$\Sexpr{round(cor(param_sens_pp[param_sens_pp[, 'MAT15'] > 0, 'MAT15'], evsi_BI_summary), 2)}). While the outcome was most sensitive to the drought-induced transition from mature high-density to mature low-density woodland, this transition was only the fifth most valuable parameter in terms of EVPXI, and was less valuable than the transition from mature low-density woodland to high-density regrowth due to wildfire under the status quo management option (to which the final outcome was less sensitive). Removing the harvest management option (Fig \ref{fig:EVSI_param_plot}b) resulted in both decreases in EVPXI for parameters and a change in the rank order of parameters based on EVPXI.
+
+Greater EVPXI could be realised if more than one parameter was sampled at a time. Both the sampling design strategies that included monitoring two parameters associated with the harvest management or no management strategies had greater EVPXI than the most valuable single parameter EVPXI calculation (Fig \ref{fig:EVSI_param_plot}c). Similarly, more value of information was available if the two most valuable parameters for transitions that began with low-density regrowth were monitored simultaneously (Fig \ref{fig:EVSI_param_plot}e). When harvest management disallowed, the EVPXI decreased, but the advantage of sampling multiple parameters remained (Figs \ref{fig:EVSI_param_plot}d \& f).
+
+To further investigate the effect of reducing the number of management options on the value of information we recalculated EVPI and the EVPXI for four parameters across a range of constraint levels for the thinning option (Fig \ref{fig:evi_cc_plot}). Increasing the allowable percentage of the landscape that could be ecologically thinned across a range of 5\% to 90\% increased EVPI linearly from 8\% to 12\%. The EVPXI for three of the four tested parameters also increased linearly but not in parallel. The greatest increase in EVPXI was for the transition from LDRG to HDRG due to coppicing under thinning. The EVPXI for transition from LDRG to HDRG due to coppicing under no management remained the same across the range of constraint levels.
+
+<<sens_prepost_BI_strats, include = FALSE, eval = FALSE>>=
+dir.create('sens_prepost_multi_BI_objs')
+for (i in names(BI_input)) {
+  j <- intersect(names(sort(evsi_BI_summary, TRUE)),
+    colnames(BI_input[[i]])[grep('Probab', colnames(BI_input[[i]]))])[1:2]
+  sens_pp_BI <- sens_prepost_BI(
+    dir = system.file('extdata/earth_BI_objs', package = 'voiWoodland'),
+    UC_in, i, j, 100, verbose = TRUE)
+  j <- paste(j, collapse='_')
+  save('sens_pp_BI',
+    file = sprintf('sens_prepost_multi_BI_objs/sens_pp_%s.rda', j))
+}
+
+sens_pp_BI <- sens_prepost_BI(
+  dir = system.file('extdata/earth_BI_objs', package = 'voiWoodland'),
+  UC_in, 'BIW', c("ProbabilityHDWtoLDWgivenBIWthenWindstorm",
+      "ProbabilityHDWtoMATgivenBIWthenDrought"),
+  100, verbose = TRUE)
+
+save('sens_pp_BI',
+  file = sprintf('sens_prepost_multi_BI_objs/sens_pp_%s.rda',
+    "ProbabilityHDWtoLDWgivenBIWthenWindstorm_ProbabilityHDWtoMATgivenBIWthenDrought"
+  )
+)
+
+sens_pp_BI <- sens_prepost_BI(
+  dir = system.file('extdata/earth_BI_objs', package = 'voiWoodland'),
+  UC_in, 'BIMan', c("ProbabilityMATtoREGgivenBIManthenWNonLethal",
+    "ProbabilityMATtoLDWgivenBIManthenWNonLethal"),
+  100, verbose = TRUE)
+
+save('sens_pp_BI',
+  file = sprintf('sens_prepost_multi_BI_objs/sens_pp_%s.rda',
+    "ProbabilityMATtoREGgivenBIManthenWNonLethal_ProbabilityMATtoLDWgivenBIManthenWNonLethal"
+  )
+)
+@
+
+<<evsi_BI_strats, include = FALSE, eval = FALSE>>=
+for (i in names(BI_input)) {
+  j <- intersect(names(sort(evsi_BI_summary, TRUE)),
+    colnames(BI_input[[i]])[grep('Probab', colnames(BI_input[[i]]))])[1:2]
+  j <- paste(j, collapse = '_')
+  load(sprintf('sens_prepost_multi_BI_objs/sens_pp_%s.rda', j))
+  if (i == 'BIW') {
+    evsi_BI_obj <- evsi_BI(BIW=sens_pp_BI, BI_output = earth_BI_preds)
+  }
+  if (i == 'BIMan') {
+    evsi_BI_obj <- evsi_BI(BIMan=sens_pp_BI, BI_output = earth_BI_preds)
+  }
+  if (i == 'BIEco') {
+    evsi_BI_obj <- evsi_BI(BIEco=sens_pp_BI, BI_output = earth_BI_preds)
+  }
+  cat('Done', i, '\n')
+  save(evsi_BI_obj,
+    file=sprintf('evsi_multi_BI_objs/evsi_%s.rda', i))
+}
+@
+
+<<sens_prepost_BI_parks_strats, include = FALSE, eval = FALSE>>=
+dir.create('sens_prepost_multi_parks_BI_objs')
+for (i in c("BIW", "BIEco")) {
+  j <- intersect(names(sort(evsi_BI_parks_summary, TRUE)),
+    colnames(BI_input[[i]])[grep('Probab', colnames(BI_input[[i]]))])[1:2]
+  sens_pp_parks_BI <-
+    sens_prepost_BI(
+      dir = system.file('extdata/earth_BI_objs', package = 'voiWoodland'),
+      UC_in, i, j, 100, verbose = TRUE)
+  j <- paste(j, collapse = '_')
+  save('sens_pp_parks_BI',
+    file = sprintf('sens_prepost_multi_parks_BI_objs/sens_pp_parks_%s.rda', j))
+}
+
+sens_pp_parks_BI <- sens_prepost_BI(
+  dir = system.file('extdata/earth_BI_objs', package = 'voiWoodland'),
+  UC_in, 'BIEco', c("ProbabilityREGtoLDWgivenBIEcothenWindFire",
+    "ProbabilityREGtoREGgivenBIEcothenDroughtMistle"),
+  100, verbose = TRUE)
+
+save('sens_pp_parks_BI',
+  file = sprintf('sens_prepost_multi_parks_BI_objs/sens_pp_parks_%s.rda',
+    "ProbabilityREGtoLDWgivenBIEcothenWindFire_ProbabilityREGtoREGgivenBIEcothenDroughtMistle"
+  )
+)
+
+sens_pp_parks_BI <- sens_prepost_BI(
+  dir = system.file('extdata/earth_BI_objs', package = 'voiWoodland'),
+  UC_in, 'BIEco', c("ProbabilityMATtoMATgivenBIEcothenWNonLethal",
+    "ProbabilityMATtoLDWgivenBIEcothenWindFire"),
+  100, verbose=TRUE)
+
+save('sens_pp_parks_BI',
+  file = sprintf('sens_prepost_multi_parks_BI_objs/sens_pp_parks_%s.rda',
+    "ProbabilityMATtoMATgivenBIEcothenWNonLethal_ProbabilityMATtoLDWgivenBIEcothenWindFire"
+  )
+)
+@
+
+<<evsi_BI_parks_strats, include = FALSE, eval = FALSE>>=
+dir.create('evsi_multi_BI_parks_objs')
+for (i in c("BIW", "BIEco")) {
+  j <- intersect(names(sort(evsi_BI_parks_summary, TRUE)),
+    colnames(BI_input[[i]])[grep('Probab', colnames(BI_input[[i]]))])[1:2]
+  j <- paste(j, collapse='_')
+  load(
+    sprintf('sens_prepost_multi_parks_BI_objs/sens_pp_parks_%s.rda', j))
+  if (i == 'BIW') {
+    evsi_BI_parks_obj <- evsi_BI_parks(BIW = sens_pp_parks_BI,
+      BI_output = earth_BI_preds)
+    save(evsi_BI_parks_obj,
+      file = sprintf('evsi_multi_BI_parks_objs/evsi_parks_%s.rda', i))
+  }
+  if (i == 'BIEco') {
+    evsi_BI_parks_obj <- evsi_BI_parks(BIEco=sens_pp_parks_BI,
+      BI_output = earth_BI_preds)
+    save(evsi_BI_parks_obj,
+      file = sprintf('evsi_multi_BI_parks_objs/evsi_parks_%s.rda', i))
+  }
+  cat('Done', i, '\n')
+}
+@
+
+<<evsi_BI_strat_sum, echo = FALSE>>=
+evsi_BI_strat_sum <- list()
+for (i in list.files(
+  system.file('extdata/evsi_multi_BI_objs/', package = 'voiWoodland')
+  )) {
+  load(system.file(sprintf('extdata/evsi_multi_BI_objs/%s', i),
+    package = 'voiWoodland'))
+  evsi_BI_strat_sum[i] <- calc_evi_BI(evsi_BI_obj)
+}
+@
+
+<<evsi_BI_strat_parks_sum, echo = FALSE>>=
+evsi_BI_parks_strat_sum <- list()
+for (i in list.files(system.file('extdata/evsi_multi_BI_parks_objs/',
+  package = 'voiWoodland'))) {
+  load(system.file(sprintf('extdata/evsi_multi_BI_parks_objs/%s', i),
+    package = 'voiWoodland'))
+  evsi_BI_parks_strat_sum[i] <- calc_evi_BI(evsi_BI_parks_obj)
+}
+@
+
+<<evsi_BI_strats2, echo = FALSE, eval = FALSE>>=
+evsi_BI_strat_sum2 <- list()
+
+REG <- sort(evsi_BI_summary[grep('ProbabilityREG', names(evsi_BI_summary))],
+  TRUE)[1:2]
+
+load(sprintf('sens_prepost_BI_objs/sens_pp_%s.rda', names(REG)[1]))
+
+BIEco <- sens_pp_BI
+
+load(sprintf('sens_prepost_BI_objs/sens_pp_%s.rda', names(REG)[2]))
+
+BIW <- sens_pp_BI
+
+evsi_BI_obj <- evsi_BI(BIEco = BIEco, BIW = BIW, BI_output = earth_BI_preds)
+evsi_BI_strat_sum2$REG <- calc_evi_BI(evsi_BI_obj)
+
+LDW <- sort(evsi_BI_summary[grep('ProbabilityLDW', names(evsi_BI_summary))],
+  TRUE)[1:2]
+
+load(sprintf('sens_prepost_BI_objs/sens_pp_%s.rda', names(LDW)[1]))
+
+BIW <- sens_pp_BI
+
+load(sprintf('sens_prepost_BI_objs/sens_pp_%s.rda', names(LDW)[2]))
+
+BIMan <- sens_pp_BI
+
+evsi_BI_obj <- evsi_BI(BIMan = BIMan, BIW = BIW, BI_output = earth_BI_preds)
+evsi_BI_strat_sum2$LDW <- calc_evi_BI(evsi_BI_obj)
+
+HDW <- sort(evsi_BI_summary[grep('ProbabilityHDW', names(evsi_BI_summary))],
+  TRUE)[1:2]
+
+load(sprintf('sens_prepost_multi_BI_objs/sens_pp_%s.rda',
+  "ProbabilityHDWtoLDWgivenBIWthenWindstorm_ProbabilityHDWtoMATgivenBIWthenDrought"
+))
+
+BIW <- sens_pp_BI
+
+evsi_BI_obj <- evsi_BI(BIW = BIW, BI_output = earth_BI_preds)
+evsi_BI_strat_sum2$HDW <- calc_evi_BI(evsi_BI_obj)
+
+MAT <- sort(evsi_BI_summary[grep('ProbabilityMAT', names(evsi_BI_summary))],
+  TRUE)[1:2]
+
+load(sprintf('sens_prepost_multi_BI_objs/sens_pp_%s.rda',
+  "ProbabilityMATtoREGgivenBIManthenWNonLethal_ProbabilityMATtoLDWgivenBIManthenWNonLethal"
+))
+
+BIMan <- sens_pp_BI
+
+evsi_BI_obj <- evsi_BI(BIMan = BIMan, BI_output = earth_BI_preds)
+evsi_BI_strat_sum2$MAT <- calc_evi_BI(evsi_BI_obj)
+save(evsi_BI_strat_sum2, file = 'evsi_BI_strat_sum2.rda')
+@
+
+<<evsi_BI_parks_strats2, echo = FALSE, eval = FALSE>>=
+evsi_BI_parks_strat_sum2 <- list()
+
+REG <- sort(
+  evsi_BI_parks_summary[grep('ProbabilityREG', names(evsi_BI_parks_summary))],
+  TRUE)[1:2]
+
+load(sprintf('sens_prepost_multi_parks_BI_objs/sens_pp_parks_%s.rda',
+  "ProbabilityREGtoLDWgivenBIEcothenWindFire_ProbabilityREGtoREGgivenBIEcothenDroughtMistle"
+))
+
+BIEco <- sens_pp_parks_BI
+
+evsi_BI_parks_obj <- evsi_BI_parks(BIEco = BIEco, BI_output = earth_BI_preds)
+evsi_BI_parks_strat_sum2$REG <- calc_evi_BI(evsi_BI_parks_obj)
+
+LDW <- sort(evsi_BI_parks_summary[grep('ProbabilityLDW',
+  names(evsi_BI_parks_summary))], TRUE)[1:2]
+
+load(sprintf('sens_prepost_BI_objs/sens_pp_%s.rda', names(LDW)[1]))
+
+BIW <- sens_pp_BI
+
+load(sprintf('sens_prepost_BI_objs/sens_pp_%s.rda', names(LDW)[2]))
+
+BIEco <- sens_pp_BI
+
+evsi_BI_parks_obj <- evsi_BI_parks(BIEco = BIEco, BIW = BIW,
+  BI_output = earth_BI_preds)
+evsi_BI_parks_strat_sum2$LDW <- calc_evi_BI(evsi_BI_parks_obj)
+
+HDW <- sort(evsi_BI_parks_summary[grep('ProbabilityHDW',
+  names(evsi_BI_parks_summary))], TRUE)[1:2]
+
+load(sprintf('sens_prepost_BI_objs/sens_pp_%s.rda', names(HDW)[1]))
+
+BIW <- sens_pp_BI
+
+load(sprintf('sens_prepost_BI_objs/sens_pp_%s.rda', names(HDW)[2]))
+
+BIEco <- sens_pp_BI
+
+evsi_BI_parks_obj <- evsi_BI_parks(BIEco = BIEco, BIW = BIW,
+  BI_output = earth_BI_preds)
+evsi_BI_parks_strat_sum2$HDW <- calc_evi_BI(evsi_BI_parks_obj)
+
+MAT <- sort(
+  evsi_BI_parks_summary[grep('ProbabilityMAT', names(evsi_BI_parks_summary))],
+  TRUE)[1:2]
+
+load(sprintf('sens_prepost_multi_parks_BI_objs/sens_pp_parks_%s.rda',
+  "ProbabilityMATtoMATgivenBIEcothenWNonLethal_ProbabilityMATtoLDWgivenBIEcothenWindFire"
+))
+
+BIEco <- sens_pp_parks_BI
+
+evsi_BI_parks_obj <- evsi_BI_parks(BIEco = BIEco, BI_output = earth_BI_preds)
+evsi_BI_parks_strat_sum2$MAT <- calc_evi_BI(evsi_BI_parks_obj)
+save(evsi_BI_parks_strat_sum2, file = 'evsi_BI_parks_strat_sum2.rda')
+@
+
+<<load_strat_sum2s, echo = FALSE>>=
+load(system.file('extdata/evsi_BI_strat_sum2.rda',
+  package = 'voiWoodland'))
+load(system.file('extdata/evsi_BI_parks_strat_sum2.rda',
+  package = 'voiWoodland'))
+@
+
+<<change_constraint_evpi, echo = FALSE>>==
+evpi_cc <- sapply(seq(.05, .9, .05),
+  function(x) calc_evi_BI(evpi_BI(BI_output = earth_BI_preds, 375, max_et = x)))
+@
+
+<<change_constraint_evsi, include=FALSE, eval = FALSE>>=
+dir.create('evsi_BI_cc_objs')
+for (i in sens_params_pp) {
+  load(sprintf('sens_prepost_BI_objs/sens_pp_%s.rda', i))
+  if (gsub('.+given', '', gsub('then.+', '', i)) == 'BIW') {
+    evsi_BI_cc_obj <- lapply(seq(.05, .9, .05),
+      function(x) evsi_BI(BIW = sens_pp_BI, BI_output = earth_BI_preds, max_et = x))
+  }
+  if (gsub('.+given', '', gsub('then.+', '', i)) == 'BIMan') {
+    evsi_BI_cc_obj <- lapply(seq(.05, .9, .05),
+      function(x) evsi_BI(BIMan = sens_pp_BI, BI_output = earth_BI_preds, max_et = x))
+  }
+  if (gsub('.+given', '', gsub('then.+', '', i)) == 'BIEco') {
+    evsi_BI_cc_obj <- lapply(seq(.05, .9, .05),
+      function(x) evsi_BI(BIEco = sens_pp_BI, BI_output = earth_BI_preds, max_et = x))
+  }
+  cat('Done', i, '\n')
+  save(evsi_BI_cc_obj,
+    file = sprintf('evsi_BI_cc_objs/evsi_cc_%s.rda', i))
+}
+@
+
+<<change_constraint_evsi_sum, echo = FALSE>>=
+evsi_BI_cc_summary <- sapply(sens_params_pp, function(x) {
+  load(system.file(sprintf('extdata/evsi_BI_cc_objs/evsi_cc_%s.rda', x),
+    package = 'voiWoodland'))
+  return(sapply(1:length(evsi_BI_cc_obj),
+    function(y) calc_evi_BI(evsi_BI_cc_obj[[y]])))
+  })
+@
+
+\section{Discussion}
+We have identified those aspects of the BIFAW system model that have the greatest value for learning. If monitoring was targeted at the most valuable parameters according to the EVPXI analysis, rather than a random parameter or even the most uncertain parameter, then the expected performance of a subsequent decision would be greater by up to 7500 hectares of mature low-density woodland (difference between most and least valuable parameters) given the number of management options and constraint we used here, which is an average of 50 hectares per year.
+
+We have also shown that if learning is targeted at subsets of the system, so as to update multiple parameters simultaneously, then some system states and management options would be better foci than others. This is because the uncertainty of some parameter sets is more critical to management decisions than others. Managers would be wiser to focus monitoring on areas subject to mangagement under the harvest management scenario rather than thinning or no management options, because learning yb reducing the uncertainty in the parameters associated with those latter options would not change the decision about which management option to use as much on average if their uncertainty was reduced. Also, if managers chose only to monitor one system state, then learning about transitions from the low-density regrowth state would see greater expected benefit than the other three states.
+
+However, where the highest value of information lies depends on the number and range of management options. In other words, the options available to managers drive the value of information as does the uncertainty they have in the outcome of their potential decisions. The greater the number and range of management options, the greater the value of information, because the more options you have the more potential there is for learning which option is the best. Taken to an extreme, if you have only one option (i.e., no decision) then learning would be pointless and the value of information would be zero. In the present case, when more thinning was permitted, the greatest increase in EVPXI was for the parameter predicting a transition after thinning took place (Fig \ref{fig:evi_cc_plot}). Parameters not associated with thinning either increased in their EVSI at slower rates or didn't change at all.
+
+We found variability in the EVPXI for parameters of the BIFAW system. Those with the greatest expected value of information were often those with uncertainty to which the system was most sensitive, but not always. Similarly, \citet{Moore2012} found that the main drivers of willow invasion were not necessarily the same as those that there was most value in learning about. In their case, while fire frequency was a driver of invasion, it was willow tree seed dispersal that had the greatest value of information. These results highlight that for optimal decision making it is not enough to simply identify those aspects of the system to which objectives are most sensitive. In the context of decision making, the expected value of information is a better measure of sensitivity than a simple sensitivity analysis because it can distinguish between decision-critical uncertainty and mere uncertainty \citep{Felli1998}.
+
+In the analyses we have presented here, we have not accounted for correlations among the transition probabilities. Experts that gave a particular value for one parameter were often more likely to have given a particular value for another parameter. We were unable to account for within-expert correlations among parameters when we updated them in the posterior analyses. The implication is that there may really be less feasible model space to update than is implied when assuming no correlations among parameters. Therefore the available space for learning and therefore potential value of information is lower than we have assumed. However, if learning about one parameter actually provides you with information about other parameters (because of the correlations), then value of information might be higher. Yet, it may be justified to ignore the expert driven correlation among parameters. An expert could be knowledgeable about one part of the system and relatively ignorant of another part, with other experts having reverse properties. Therefore, hybrid models that combine the uncertainty of multiple experts are just as plausible, or more so, than the opinion of any one expert. On the other hand one might have faith in within-expert parameter correlations in general, because if an expert is right or wrong about one component of a system they are likely to be similarly right or wrong about other aspects. The issue of within-expert correlation is not well studied. Though some others have assessed the related case of between-expert correlation in parameter estimation (e.g., \cite{Zio1997}).
+
+The preposterior analyses we performed required us to make assumptions regarding the monitoring to update the parameters in the model. For monitoring to take place in the manner described, vegetation states must be able to easily be determined in the field. In addition they must be identifiable to a degree of accuracy that they can be distinguished from one another so that a transition between states is evident and recordable after revisits occurring in a short space of time. States must not only themselves be identifiable, but the surveyor must also be able to tell that a unit of vegetation has been in a state for the required period of time for a specific transition to occur, and that any transition that does occur has occurred due to a specific causal agent. For some transition probabilities this set of assumptions seems plausible. For instance, the transition from low to high-density regrowth due to coppicing may not be that hard to identify and record, whereas recognizing that a unit of vegetation remained as low-density regrowth because of combination of drought and mistletoe may be far more difficult. This problem arises because state-transition models are only supposed to represent vegetation dynamics on average and do necessarily reflect observable phenomenon.
+
+In summary we would recommend a value of information analyses be performed to inform monitoring and even decide whether it should take place at all. We have shown that it can be used to identify which parts of a complex model system are most valuable to address. Here, given the assumptions we have outlined above, managers should focus scarce monitoring resources first on the harvest management option (if that option is on the table) and the low-density regrowth states. We caution, that these findings are dependent on the objective and the number of management options avavailable. We have highlighted this dependence by demonstrating how the value of information changes differentially among model parameters as the constraints on the decision are modified.
+
+\section{Acknowledgements}
+We acknowledge Christina Czembor for conducting the initial research upon which these analyses are based. We also thank Patrick Piggot and Parks Victoria for their assistance. This work was supported by the Australian Research Council through the Centre of Excellence in Environmental Decisions and Linkage Project LP110100321; and the Victorian Department of Sustainability and Environment.
+\section{Data Accessibility}
+All data and software for this manuscript is available at doi
+
+\newpage
+\printbibliography
+\newpage
+<<pre_post_egs, echo = FALSE, eval = FALSE>>==
+while(sort(attr(pre_post_egs <- pre_posterior(UC_in[[1]][, 1], 3, 1000), 'p'))[2] == 0) {}
+save(pre_post_egs, file = 'pre_post_egs.rda')
+@
+<<plot_prepost_eg, echo = FALSE, fig.scap = "An example posterior analysis. Top row: three random samples (dashed vertical lines) are drawn from a prior, $\\theta^\\prime$, a zero-inflated beta distribution. Middle row: for each sample experimental outcome, $z$ is simulated. In this case the outcomes are binomial trials with probabilities equal to the samples of the prior, black cells indicating successs or 1's and blank cells indicating failures or 0's. Bottom row: using Bayes's rule, the prior is updated in parallel for each instance of $z$, thus creating three plausible posterior distributions, $\\theta^{\\prime\\prime}$.", fig.cap = "", fig.width = 5.59055, fig.height = 5.59055>>==
+load(system.file('extdata/pre_post_egs.rda', package = 'voiWoodland'))
+par(mfrow = c(3, 3), oma = c(3, 4, 1, 1), mar = c(1, 1, 0, 0), las = 1,
+  yaxs = 'i')
+hist(UC_in[[1]][, 1], main = '', xlab = '', ylab = '', xlim = c(-.001, .03),
+  xaxt = 'n', yaxt = 'n', ylim = c(0, 375), breaks = 0:20 * .0015, border = NA,
+  col = 'grey')
+abline(v = attr(pre_post_egs, 'probability')[1], lty = 2)
+box()
+mtext(side = 2, text = '$\\bar{\\theta}^\\prime$', las = 1, line = 2)
+
+hist(UC_in[[1]][, 1], main = '', xlab = '', ylab = '', xlim = c(-.001, .03),
+  xaxt = 'n', yaxt = 'n', ylim = c(0, 375), breaks = 0:20 * .0015, border = NA,
+  col = 'grey')
+abline(v = attr(pre_post_egs, 'probability')[2], lty = 2)
+box()
+hist(UC_in[[1]][, 1], main = '', xlab = '', ylab = '', xlim = c(-.001, .03),
+  xaxt = 'n', yaxt = 'n',ylim = c(0, 375), breaks = 0:20 * .0015, border = NA,
+  col = 'grey')
+abline(v = attr(pre_post_egs, 'probability')[3], lty = 2)
+box()
+image(1:40, 1:25,
+  matrix(sample(c(rep(0, 1000 - attr(pre_post_egs[[1]], 'm')),
+    rep(1, attr(pre_post_egs[[1]], 'm')))), ncol = 25),
+  col = c('white', 'black'), xaxt = 'n', yaxt = 'n', xaxs = 'i', bty = 'n')
+invisible(sapply(0:25 + .5, function(x) abline(h = x)))
+invisible(sapply(0:40 + .5, function(x) abline(v = x)))
+mtext(side = 2, text = '$z$', las = 1, line = 2)
+
+image(1:40, 1:25,
+  matrix(sample(c(rep(0, 1000 - attr(pre_post_egs[[2]], 'm')),
+    rep(1, attr(pre_post_egs[[2]], 'm')))), ncol = 25),
+  col = c('white', 'black'), xaxt = 'n', yaxt = 'n', xaxs = 'i', bty = 'n')
+invisible(sapply(0:25 + .5, function(x) abline(h = x)))
+invisible(sapply(0:40 + .5, function(x) abline(v = x)))
+
+image(1:40, 1:25,
+  matrix(sample(c(rep(0, 1000 - attr(pre_post_egs[[3]], 'm')),
+    rep(1, attr(pre_post_egs[[3]], 'm')))), ncol = 25),
+  col = c('white', 'black'), xaxt = 'n', yaxt = 'n', xaxs = 'i', bty = 'n')
+invisible(sapply(0:25 + .5, function(x) abline(h = x)))
+invisible(sapply(0:40 + .5, function(x) abline(v = x)))
+
+hist(pre_post_egs[[1]], main = '', xlab = '', ylab = '', xlim = c(-.001, .03),
+  ylim = c(0, 375), xaxt = 'n', yaxt = 'n', breaks = 0:20 * .0015, border = NA,
+  col = 'grey')
+box()
+axis(side = 1, at = 0:3 / 100)
+mtext(side = 2, text = '$\\bar{\\theta}^{\\prime\\prime}$', las = 1, line = 2)
+hist(pre_post_egs[[2]], main = '', xlab = '', ylab = '', xlim = c(-.001, .03),
+  ylim = c(0, 375), xaxt = 'n', yaxt = 'n', breaks = 0:20 * .0015, border = NA,
+  col = 'grey')
+box()
+axis(side = 1, at = 0:3 / 100)
+hist(pre_post_egs[[3]], main = '', xlab = '', ylab = '', xlim = c(-.001, .03),
+  ylim = c(0, 375), xaxt = 'n', yaxt = 'n', breaks = 0:20 * .0015, border = NA,
+  col = 'grey')
+box()
+axis(side = 1, at = 0:3 / 100)
+@
+
+<<EVSI_param_plot, echo = FALSE, fig.scap = "The expected partial value of perfect information (EVPXI) for the top five model parameters, and the top sampling strategies for both managment scenarios. Units of value are gain in percentage points of the area in the mature low-density woodland state after 150 years. Dashed line shows the expected value of perfect information. Panel (a) shows the top five most valuable parameters for the objective function that includes the harvest firewood removal option and panel (b) the top five for the objective without. Panels (c) and (d) show the value of information for the sampling strategies targeting specific management actions for each objective. And panels (e) and (f) for the sampling strategies targeting specific vegetation states.", fig.cap = "">>==
+par(mfrow = c(3, 2), mar = c(2, .5, .5, .5), oma = c(1, 4, 1, 1))
+
+barplot(sort(evsi_BI_summary, TRUE)[1:5] * 100, las = 1, yaxt = 'n',
+  ylim = c(0, 12), ylab = '', border = NA,
+  names.arg = c('LDRG to HDRG\nCoppicing\nHF', 'LDRG to HDRG\nCoppicing\nNM',
+    'MLDW to HDRG\nWildfire\nHF', 'LDRG to HDRG\nCoppicing\nET',
+    'MHDW to LDRG\nWindthrow\nHF'), cex.names = .4, mgp = c(3, .75, 1)
+)
+axis(2, las = 1)
+box()
+abline(h = evpi_BI_obj * 100, lty = 2)
+mtext('a', 2, at = 12, line = -1, las = 1, cex = .8, padj = 1.5)
+
+barplot(sort(evsi_BI_parks_summary, TRUE)[1:5] * 100, las = 1, yaxt = 'n',
+  ylim = c(0, 12), ylab = '', border = NA, cex.names = .4, mgp = c(3, .75, 1),
+  names.arg = c('LDRG to HDRG\nCoppicing\nNM', 'LDRG to HDRG\nCoppicing\nET',
+    'MHDW to LDRG\nWind\nNM', 'MHDW to MLDW\nDrought\nET',
+    'MHDW to HDRG\nWildfire\nNM')
+)
+box()
+abline(h = evpi_BI_parks_obj * 100, lty = 2)
+mtext('b', 2, at = 12, line = -1, las = 1, cex = .8, padj = 1.5)
+
+barplot(sort(unlist(evsi_BI_strat_sum), TRUE) * 100, las = 1, yaxt = 'n',
+  ylim = c(0, 12), ylab = '', border = NA, names.arg = c('HF', 'NM', 'ET'),
+  cex.names = .8, mgp = c(3, .5, 1)
+)
+axis(2, las = 1)
+box()
+abline(h = evpi_BI_obj * 100, lty = 2)
+mtext('c', 2, at = 12, line = -1, las = 1, cex = .8, padj = 1.5)
+
+barplot(sort(unlist(evsi_BI_parks_strat_sum), TRUE) * 100, las = 1, yaxt = 'n',
+  ylim = c(0, 12), ylab = '', border = NA, names.arg = c('NM', 'ET'), cex.names = .8,
+  mgp = c(3, .5, 1)
+)
+box()
+abline(h = evpi_BI_parks_obj * 100, lty = 2)
+mtext('d', 2, at = 12, line = -1, las = 1, cex = .8, padj = 1.5)
+
+barplot(sort(unlist(evsi_BI_strat_sum2), TRUE) * 100, las = 1, yaxt = 'n',
+  ylim = c(0, 12), ylab = '', border = NA,  cex.names = .8, mgp = c(3, .5, 1),
+  names.arg = c('LDRG', 'LDMW', 'HDMW', 'HDRG'))
+axis(2, las = 1)
+box()
+abline(h = evpi_BI_obj * 100, lty = 2)
+mtext('e', 2, at = 12, line = -1, las = 1, cex = .8, padj = 1.5)
+
+barplot(sort(unlist(evsi_BI_parks_strat_sum2), TRUE) * 100, las = 1, yaxt = 'n',
+  ylim = c(0, 12), ylab = '', border = NA, cex.names = .8, mgp = c(3, .5, 1),
+  names.arg = c('LDRG', 'LDMW', 'HDMW', 'HDRG'))
+box()
+abline(h = evpi_BI_parks_obj * 100, lty = 2)
+mtext('f', 2, at = 12, line = -1, las = 1, cex = .8, padj = 1.5)
+
+mtext('Value of information (\\% gain in MLDW)', side = 2, line = 2, outer = TRUE)
+@
+
+<<evi_cc_plot, echo = FALSE, fig.scap = "Response of the value information to changing the constraint on the allowable amount of thinning for the objective function that includes the harvest/firewood removal option. Thick black line is EVPI. Dashed grey line is EVPXI for the transition from LDRG to HDRG due to Coppicing under HF. Dotted black line is EVPXI for the transition from LDRG to HDRG due to Coppicing under NM. Solid grey line is EVPXI for the transition from LDRG to HDRG due to Coppicing under ET. Thin black line is EVPXI for the transition from MHDW to LDRG due to Windthrow under HF.", fig.cap = "", fig.width = 5.59055, fig.height = 5.59055>>==
+par(mar = c(5, 4, 1, 1))
+plot(seq(.05, .9, .05) * 100, evpi_cc * 100, type = 'l', las = 1, xlim = c(-10, 105),
+  ylim = c(0, 13), ylab = 'Value of information (\\% gain in MLDW)',
+  xlab = 'Maximum \\% of landscape ecologically thinned', lwd = 4,
+  panel.first = abline(v = 20, col = 'grey'))
+cols <- c('grey', 'black', 'grey', 'black')
+pars <- c(1, 2, 4, 5)
+lwds <- c(2, 2, 4, 2)
+ltys <- c(5, 3, 1, 1)
+for (i in 1:4) {
+  points(seq(.05, .9, .05) * 100,
+    evsi_BI_cc_summary[, names(sort(evsi_BI_summary, TRUE))][, pars[i]] * 100,
+    type = 'l', col = cols[i], lwd = lwds[i], lty = ltys[i])
+}
+text(90,
+ tail(evsi_BI_cc_summary[, names(sort(evsi_BI_summary, TRUE))][, pars[1]] * 100, 1),
+ 'LDRG-HDRG\nCoppicing,HF', cex = .5, pos = 4)
+text(5,
+ head(evsi_BI_cc_summary[, names(sort(evsi_BI_summary, TRUE))][, pars[2]] * 100, 1),
+ 'LDRG-HDRG\nCoppicing,NM', cex = .5, pos = 2)
+text(90,
+ tail(evsi_BI_cc_summary[, names(sort(evsi_BI_summary, TRUE))][, pars[4]] * 100, 1),
+ 'MHDW-LDRG\nWindthrow,HF', cex = .5, pos = 4)
+text(5,
+ head(evsi_BI_cc_summary[, names(sort(evsi_BI_summary, TRUE))][, pars[3]] * 100, 1),
+ 'LDRG-HDRG\nCoppicing,ET', cex = .5, pos = 2)
+@
+\end{spacing}
+\end{document}
