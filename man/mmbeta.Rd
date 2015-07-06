@@ -6,7 +6,7 @@
 
 \description{Estimate the shape parameters of a beta distributions via moment matching of a sample dataset}
 
-\usage{mbeta(x)}
+\usage{mmbeta(x)}
 
 \arguments{
  \item{x}{numeric vector. All elements must be positive and less than one.}
@@ -23,6 +23,6 @@ William K. Morris.
 \seealso{\code{link{dbeta}}}
 
 \examples{
-x <- rbeta{100, .5, .5}
+x <- rbeta(100, .5, .5)
 mmbeta(x)
 }

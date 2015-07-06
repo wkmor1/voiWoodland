@@ -6,12 +6,13 @@
 
 \description{Create a set of preposterior distributions by updating a unit interval prior distribution with hypothetical binomial trials.}
 
-\usage{pre_posterior(x, n, size)}
+\usage{pre_posterior(x, n, size, px=FALSE)}
 
 \arguments{
  \item{x}{numeric vector. A sample from the prior distribution to update.}
  \item{n}{integer. The number of preposterior distributions to produce.}
  \item{size}{integer. The number of binomial trials to conduct for each experiment}
+ \item{px}{logical}
 }
 
 \details{
@@ -26,7 +27,7 @@ William K. Morris.
 \seealso{\code{\link{mmbeta}}}
 
 \examples{
-x <- rbeta{100, .5, .5}
+x <- rbeta(100, .5, .5)
 mean(x)
 x.pp <- pre_posterior(x, 10, 1000)
 str(x.pp)

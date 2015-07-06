@@ -9,7 +9,7 @@
 
 \usage{
 earth_BI(BI_output, BI_input, n_boot, dir, verbose=FALSE)
-predict(newdata, dir, verbose=FALSE)
+predict_BI(newdata, dir, verbose=FALSE)
 }
 
 \arguments{
@@ -22,12 +22,12 @@ predict(newdata, dir, verbose=FALSE)
 }
 
 \details{
-These functions model, and predict new data, respectively, from the output of the state and transition models for Box Ironbark Woodlands of \href{http://wkmor1.files.wordpress.com/2012/06/czembormorrisveskwintle2011.pdf}{Czembor etal 2011}. The models are fitted using Multivariate Adaptive Regression Splines (MARS) with the \code{earth} function from the package `earth'. The function \code{earth_BI} fits a set of MARS model for the selected management types specified in the \code{BI_input} list. For each management type a model is fit for each vegetation state and within in that, for each timestep from 10 through 150 years in increments of 10 years. 
+These functions model, and predict new data, respectively, from the output of the state and transition models for Box Ironbark Woodlands of \href{http://wkmor1.files.wordpress.com/2012/06/czembormorrisveskwintle2011.pdf}{Czembor etal 2011}. The models are fitted using Multivariate Adaptive Regression Splines (MARS) with the \code{earth} function from the package `earth'. The function \code{earth_BI} fits a set of MARS model for the selected management types specified in the \code{BI_input} list. For each management type a model is fit for each vegetation state and within in that, for each timestep from 10 through 150 years in increments of 10 years.
 }
 
 \value{
 \code{earth_BI} saves its output to the specified directory.
-\code{predict_BI} returns a three element list containing predictions for each management scenario. Each element of this list has itself three elements one for each state (less one state as the total cover of all four states must equal one) which in turn have 15 elements for the modelled timesteps. Each management by state by timestep prediction consists of a two element list the first of which is the full model and the second a \code{n_boot} column matrix of bootstrap prediction. 
+\code{predict_BI} returns a three element list containing predictions for each management scenario. Each element of this list has itself three elements one for each state (less one state as the total cover of all four states must equal one) which in turn have 15 elements for the modelled timesteps. Each management by state by timestep prediction consists of a two element list the first of which is the full model and the second a \code{n_boot} column matrix of bootstrap prediction.
 }
 
 \references{
@@ -49,6 +49,6 @@ data(BI_input)
 earth_BI(BI_output=BI_output, BI_input=BI_input,
   n_boot=9, dir=tempdir(), verbose=TRUE)
 
-earth_BI_preds <- predict_BI(BI_input, dir=tempdir(), verbose=TRUE)   
+earth_BI_preds <- predict_BI(BI_input, dir=tempdir(), verbose=TRUE)
 }
 
