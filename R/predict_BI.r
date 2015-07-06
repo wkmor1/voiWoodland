@@ -46,3 +46,5 @@ predict_BI <- function(newdata, dir, verbose=FALSE) {
   return(predict_BI_obj)
 
 }
+
+globalVariables("earth_BI_obj_ijk")

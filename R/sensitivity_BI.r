@@ -52,3 +52,6 @@ sensitivity_BI <- function(dir, newdata, manage, param, n, verbose=FALSE) {
   attr(sensitivity_BI_obj, 'tested_values') <- param_values
   return(sensitivity_BI_obj)
 
+}
+
+globalVariables("earth_BI_obj_ijk")

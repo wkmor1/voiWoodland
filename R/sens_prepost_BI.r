@@ -49,3 +49,6 @@ sens_prepost_BI <- function(dir, newdata, manage, param, n, size=1000, px=FALSE,
   attr(sensitivity_BI_obj, 'tested_values') <- preposts
   return(sensitivity_BI_obj)
 
+}
+
+globalVariables("earth_BI_obj_ijk")
