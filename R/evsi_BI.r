@@ -10,7 +10,7 @@ evsi_BI <- function(BIW=NULL, BIMan=NULL, BIEco=NULL, BI_output, max_et=.2) {
       obj_fun_simp(x, BIW=NULL, BIMan=NULL, BIEco=NULL, BI_output=BI_output)},
     NULL, ui, ci, control=list(fnscale=-1))
 
-  max_k <- mclapply(seq_len(max(length(BIW), length(BIMan), length(BIEco))), 
+  max_k <- lapply(seq_len(max(length(BIW), length(BIMan), length(BIEco))),
     function(k) {
       constrOptim(init,
         function(x) {
@@ -18,8 +18,8 @@ evsi_BI <- function(BIW=NULL, BIMan=NULL, BIEco=NULL, BI_output, max_et=.2) {
             BI_output=BI_output,
             BIW=BIW, BIMan=BIMan, BIEco=BIEco, k)},
         NULL, ui, ci, control=list(fnscale=-1))
-      }, mc.cores=5)
- 
+      })
+
   return(list(e_max, max_k))
 
 }

@@ -19,15 +19,15 @@ earth_BI <- function(BI_output, BI_input, n_boot, dir, verbose=FALSE) {
         earth_BI_obj_ijk[[1]]$fitted.values <- NA
 
         if(verbose) cat(sprintf('%s %s %s \n', i, j, k))
-        
-        earth_BI_obj_ijk[[2]] <- mclapply(integer(n_boot), eval.parent(substitute(function(...) {
+
+        earth_BI_obj_ijk[[2]] <- lapply(integer(n_boot), eval.parent(substitute(function(...) {
           x <- earth::earth(qlogis(((Area) * .998) + .001) ~ .,
             data=BI_outputSS[sample(seq_len(nrow(BI_outputSS)), replace=TRUE), -1:-4],
             degree=3)
           x$fitted.values <- NA
           x
-          })), mc.cores=detectCores() / ceiling(n_boot / detectCores()))
-        
+          })))
+
         save('earth_BI_obj_ijk', file=sprintf('%s/%s_%s_%s.rda', dir, i, j, k))
 
       }
@@ -36,3 +36,6 @@ earth_BI <- function(BI_output, BI_input, n_boot, dir, verbose=FALSE) {
 
   }
 
+}
+
+globalVariables(c("CTAbbr", "SSAbbr", "Timestep"))

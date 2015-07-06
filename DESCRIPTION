@@ -1,6 +1,6 @@
 Package: voiWoodland
 Title: Value of information for woodland management
-Version: 0.0.9008
+Version: 0.0.9009
 Authors@R: person(c("William", "Keith"), "Morris", email = "wkmor1@gmail.com", role = c("aut", "cre"))
 Description: Value of information for woodland management What you can do, tell's you what you need to know. Vegetation is often managed under uncertainty. Experimentation and monitoring can reduce uncertainty and therefore allow management decisions with greater expected benefits. However, the decision to experiment or monitor at all is only rational if the expected net gain is greater than the cost of sampling. A value of information analysis can a priori assess the efficacy of seeking to reduce uncertainty via sampling. I performed a value of information analysis for Box-Ironbark Forests and Woodland management in central Victoria. This analysis reveals whether to experiment and monitor to reduce uncertainty in a system model, as well as which aspects of model uncertainty are most cost-effective to address.
 Depends: R (>= 3.2.0)
