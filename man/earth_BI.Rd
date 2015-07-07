@@ -43,6 +43,7 @@ William K. Morris.
 }
 
 \examples{
+\dontrun{
 data(BI_output)
 data(BI_input)
 
@@ -50,5 +51,6 @@ earth_BI(BI_output=BI_output, BI_input=BI_input,
   n_boot=9, dir=tempdir(), verbose=TRUE)
 
 earth_BI_preds <- predict_BI(BI_input, dir=tempdir(), verbose=TRUE)
+}
 }
 
