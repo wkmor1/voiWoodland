@@ -193,6 +193,10 @@ UC_in <- lapply(UC_in,
       pre_posterior(y, 1, 0)[[1]]} else {y}}))
 @
 
+<<save_uncor_input, include = FALSE, eval = FALSE>>=
+save(UC_in, file = 'UC_in.rda')
+@
+
 <<earth_BI_preds, include = FALSE, eval = FALSE>>=
 earth_BI_preds <- predict_BI(dir = 'earth_BI_objs', UC_in, verbose = TRUE)
 
@@ -656,9 +660,10 @@ load(system.file('extdata/evsi_BI_parks_strat_sum2.rda',
   package = 'voiWoodland'))
 @
 
-<<change_constraint_evpi, echo = FALSE>>==
+<<change_constraint_evpi, echo = FALSE, eval = FALSE>>==
 evpi_cc <- sapply(seq(.05, .9, .05),
   function(x) calc_evi_BI(evpi_BI(BI_output = earth_BI_preds, 375, max_et = x)))
+save(evpi_cc, file='evpi_cc.rda')
 @
 
 <<change_constraint_evsi, include=FALSE, eval = FALSE>>=
@@ -721,6 +726,7 @@ save(pre_post_egs, file = 'pre_post_egs.rda')
 @
 <<plot_prepost_eg, echo = FALSE, fig.scap = "An example posterior analysis. Top row: three random samples (dashed vertical lines) are drawn from a prior, $\\theta^\\prime$, a zero-inflated beta distribution. Middle row: for each sample experimental outcome, $z$ is simulated. In this case the outcomes are binomial trials with probabilities equal to the samples of the prior, black cells indicating successs or 1's and blank cells indicating failures or 0's. Bottom row: using Bayes's rule, the prior is updated in parallel for each instance of $z$, thus creating three plausible posterior distributions, $\\theta^{\\prime\\prime}$.", fig.cap = "", fig.width = 5.59055, fig.height = 5.59055>>==
 load(system.file('extdata/pre_post_egs.rda', package = 'voiWoodland'))
+load(system.file('extdata/UC_in.rda', package = 'voiWoodland'))
 par(mfrow = c(3, 3), oma = c(3, 4, 1, 1), mar = c(1, 1, 0, 0), las = 1,
   yaxs = 'i')
 hist(UC_in[[1]][, 1], main = '', xlab = '', ylab = '', xlim = c(-.001, .03),
@@ -840,6 +846,7 @@ mtext('Value of information (\\% gain in MLDW)', side = 2, line = 2, outer = TRU
 @
 
 <<evi_cc_plot, echo = FALSE, fig.scap = "Response of the value information to changing the constraint on the allowable amount of thinning for the objective function that includes the harvest/firewood removal option. Thick black line is EVPI. Dashed grey line is EVPXI for the transition from LDRG to HDRG due to Coppicing under HF. Dotted black line is EVPXI for the transition from LDRG to HDRG due to Coppicing under NM. Solid grey line is EVPXI for the transition from LDRG to HDRG due to Coppicing under ET. Thin black line is EVPXI for the transition from MHDW to LDRG due to Windthrow under HF.", fig.cap = "", fig.width = 5.59055, fig.height = 5.59055>>==
+load(system.file('extdata/evpi_cc.rda', package = 'voiWoodland'))
 par(mar = c(5, 4, 1, 1))
 plot(seq(.05, .9, .05) * 100, evpi_cc * 100, type = 'l', las = 1, xlim = c(-10, 105),
   ylim = c(0, 13), ylab = 'Value of information (\\% gain in MLDW)',
