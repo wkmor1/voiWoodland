@@ -13,10 +13,7 @@
 \usepackage[symbol]{footmisc}
 \setcounter{secnumdepth}{0}
 \usepackage{url}
-\usepackage[citestyle = authoryear, bibstyle = voiWoodland, natbib = true,
-  maxcitenames = 3, maxbibnames = 999, uniquelist = false, sortcites = true,
-  backend = bibtex]{biblatex}
-\addbibresource{voiWoodland.bib}
+\usepackage{natbib}
 \usepackage{lineno}
 \linenumbers
 \setlength{\parindent}{0pt}
@@ -50,6 +47,7 @@ Michael C. Runge$^{2,3}$ (mrunge@usgs.gov)
 1. Quantitative and Applied Ecology Group, School of BioSciences, The University of Melbourne, Vic 3010, Australia.\\
 2. The Australian Research Council Centre of Excellence for Environmental Decisions.\\
 3. United States Geological Survey, Patuxent Wildlife Research Center, Laurel, MD 20708, United States.\\
+\\
 \textit{\large{Word count}}\\
 Total: 6570\\
 Summary: 320\\
@@ -61,7 +59,7 @@ Figure legends: 500\\
 Number of Tables: 0\\
 Number of Figures: 3\\
 Number of References: 37
-\vspace{22em}\\
+\vspace{22em}
 \normalsize
 \newpage
 \begin{spacing}{2}
@@ -718,7 +716,8 @@ We acknowledge Christina Czembor for conducting the initial research upon which 
 All data and software for this manuscript is available at doi
 
 \newpage
-\printbibliography
+\bibliographystyle{besjournals}
+\bibliography{voiWoodland}
 \newpage
 <<pre_post_egs, echo = FALSE, eval = FALSE>>==
 while(sort(attr(pre_post_egs <- pre_posterior(UC_in[[1]][, 1], 3, 1000), 'p'))[2] == 0) {}
@@ -786,7 +785,7 @@ box()
 axis(side = 1, at = 0:3 / 100)
 @
 
-<<EVSI_param_plot, echo = FALSE, fig.scap = "The expected partial value of perfect information (EVPXI) for the top five model parameters, and the top sampling strategies for both managment scenarios. Units of value are gain in percentage points of the area in the mature low-density woodland state after 150 years. Dashed line shows the expected value of perfect information. Panel (a) shows the top five most valuable parameters for the objective function that includes the harvest firewood removal option and panel (b) the top five for the objective without. Panels (c) and (d) show the value of information for the sampling strategies targeting specific management actions for each objective. And panels (e) and (f) for the sampling strategies targeting specific vegetation states.", fig.cap = "">>==
+<<EVSI_param_plot, echo = FALSE, fig.scap = "The expected partial value of perfect information (EVPXI) for the top five model parameters, and the top sampling strategies for both managment scenarios. Units of value are gain in percentage points of the area in the mature low-density woodland state after 150 years. Dashed line shows the expected value of perfect information. Panel (a) shows the top five most valuable parameters for the objective function that includes the harvest firewood removal option and panel (b) the top five for the objective without. Panels (c) and (d) show the value of information for the sampling strategies targeting specific management actions for each objective. And panels (e) and (f) for the sampling strategies targeting specific vegetation states.", fig.cap = "", fig.width = 5.59055, fig.height = 5.59055>>==
 par(mfrow = c(3, 2), mar = c(2, .5, .5, .5), oma = c(1, 4, 1, 1))
 
 barplot(sort(evsi_BI_summary, TRUE)[1:5] * 100, las = 1, yaxt = 'n',
