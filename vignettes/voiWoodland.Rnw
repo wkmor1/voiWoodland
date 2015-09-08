@@ -74,7 +74,7 @@ Number of References: 37
 
 \item We found the VOI to be dependent on the number of management options. When the number of management options increased, the value of perfect information increased linearly. However the value of partial perfect information increased at different rates for different model parameters.
 
-\item \textit{Synthesis and applications}.
+\item \textit{Synthesis and applications}
 Our analyses show it is more cost-effective to monitor low-density regrowth forest than other states, and more cost-effective to experiment on the limited harvest/firewood removal alternative than the other management alternatives. Importantly, the most cost-effective strategies did not include either the most desired forest state, nor the least understood management strategy, ecological thinning. This implies that managers cannot just rely on intuition to tell them where the most value of information will lie, as critical uncertainties in a complex system could be cryptic.
 
 \end{enumerate}
