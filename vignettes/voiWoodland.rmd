@@ -1,0 +1,54 @@
+---
+title: "The value of information for woodland management: optimally updating a state and transition model"
+author: "William K. Morris, Michael C. Runge & Peter A. Vesk"
+date: '`r Sys.Date()`'
+output:
+  html_document:
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+    theme: journal
+  pdf_document:
+    fig_caption: yes
+    fig_height: 5
+    fig_width: 7
+header-includes:
+- \linespread{1.9}\selectfont
+- \usepackage{setspace}
+- \usepackage{caption}
+- \captionsetup{font={stretch=1.9}}
+bibliography: voiWoodland.bib
+---
+
+```{r setup, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(cache = TRUE)
+library(voiWoodland)
+library(dplyr)
+library(ggplot2)
+```
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+```{r abstract, child = "abstract.rmd"}
+```
+
+```{r introduction, child = "introduction.rmd"}
+```
+
+```{r methods, child = "methods.rmd"}
+```
+
+```{r results, child = "results.rmd"}
+```
+
+```{r discussion, child = "discussion.rmd"}
+```
+
+Acknowledgements
+================
+
+We acknowledge Christina Czembor for conducting the initial research upon which these analyses are based. We also thank Patrick Piggot and Parks Victoria for their assistance. This work was supported by the Australian Research Council through the Centre of Excellence in Environmental Decisions and Linkage Project LP110100321; and the Victorian Department of Sustainability and Environment.

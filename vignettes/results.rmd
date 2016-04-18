@@ -1,0 +1,142 @@
+```{r, echo = FALSE}
+library(voiWoodland)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+```{r}
+parameters_df <- unique(bifaw$parameter)
+
+parameters_df <-
+  regexec(
+    "([A-Za-z]*)([A-Z]{4})to([A-Z]{4})given([A-Z]{2})then(.*)",
+    parameters_df
+  ) %>%
+  regmatches(parameters_df, .) %>%
+  do.call(rbind, .) %>%
+  data.frame(stringsAsFactors = FALSE) %>%
+  setNames(c("parameters", "type", "from", "to", "action", "cause"))
+```
+
+```{r, echo = FALSE}
+evpxi_all <-
+  evoi(bifaw, type = "evpxi", ncores = 60) %>%
+  left_join(parameters_df) %>%
+  filter(type == "Probability") %>%
+  arrange(desc(evi))
+
+action_list <- 
+  with(
+    evpxi_all,
+    tapply(parameters, action, head, 2) %>%
+    lapply(function(x) setNames(x, action[parameters %in% x]))
+  )
+
+state_list <-
+  with(
+    evpxi_all,
+    tapply(parameters, from, head, 2) %>%
+    lapply(function(x) setNames(x, action[parameters %in% x]))
+  )
+
+evpxi_actions <-
+  evoi(bifaw, type = "evpxi_list", parameter_list = action_list)
+
+evpxi_states <-
+  evoi(bifaw, type = "evpxi_list", parameter_list = state_list)
+
+evpi <- evoi(bifaw)
+
+types <- c("Managements actions", "Initial states", "Transition probabilities")
+
+evi <-
+  bind_rows(evpi, evpxi_actions, evpxi_states) %>%
+  full_join(evpxi_all) %>%
+  filter(evi > 0) %>%
+  slice(c(1, 1, 1:12)) %>%
+  mutate(
+    type = c(types, rep(types, each = 4)[-1]),
+    parameters = 
+      ifelse(
+        !is.na(from),
+        paste0(cause, " (", action, ")\n", from, "-", to),
+        parameters
+      ),
+    width = ifelse(type == "Action", .72, .9),
+    evpi = parameters == "EVPI"
+  ) %>%
+  mutate(
+    type = factor(type, levels = rev(types)),
+    parameters = 
+      factor(
+        parameters, 
+        levels = unique(parameters[order(evi, decreasing = TRUE)])
+      )
+  )
+
+```
+
+```{r, echo = FALSE}
+ggplot(evi) +
+aes(parameters, evi, width = width, fill = evpi) +
+geom_bar(stat = "identity") +
+scale_y_continuous(
+  "Expected Value of Information",
+  labels = scales::percent
+) +
+scale_fill_grey() +
+xlab("") +
+guides(fill = FALSE) +
+facet_wrap(~type, ncol = 1, scales = "free")
+```
+
+
+```{r, echo = FALSE}
+evpi_df <- evoi(bifaw, max_eco = seq(.1, 1, .1))
+evpxi_df <- evoi(bifaw, max_eco = seq(.1, 1, .1), ncores = 60,type = "evpxi")
+```
+
+```{r, echo = FALSE}
+evdf <- unique(bifaw$parameter)
+
+evdf <-
+  regexec(
+    "([A-Za-z]*)([A-Z]{4})to([A-Z]{4})given([A-Za-z]*)then([A-Za-z]*)",
+    evdf
+  ) %>%
+  regmatches(evdf, .) %>%
+  do.call(rbind, .) %>%
+  data.frame(stringsAsFactors = FALSE) %>%
+  setNames(c("parameters", "type", "from", "to", "action", "cause")) %>%
+  merge(evpxi_df) %>%
+  filter(evi > 0, type == "Probability")
+
+top_params <-
+  with(evdf, tapply(evi, list(parameters, action), max)) %>%
+  {rownames(.)[apply(., 2, which.max)]}
+
+evdf <- filter(evdf, parameters %in% top_params)
+```
+
+```{r, echo = FALSE}
+ggplot() +
+aes(x = max_eco, y = evi) +
+geom_line(
+  data = evpi_df,
+  size = 1.25,
+  col = "grey"
+) +
+geom_line(
+  aes(linetype = action),
+  data = evdf,
+  size = 1.25
+) +
+scale_linetype_discrete(name = "Action", guide = guide_legend(keywidth = 2)) +
+scale_x_continuous(
+  "Maximum allowed ecological thinning",
+  labels = scales::percent
+) +
+scale_y_continuous("EVI", labels = scales::percent) +
+theme_bw()
+```
