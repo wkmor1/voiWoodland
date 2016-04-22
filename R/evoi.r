@@ -17,6 +17,7 @@
 #' @importFrom parallel mclapply
 #' @importFrom tidyr spread_
 #' @importFrom stats predict
+#' @importFrom earth earth
 
 #' @export
 
@@ -74,6 +75,9 @@ evoi <-
       }
     )
   }
+
+
+
 
 o2v <- function(outcomes, max_eco) {
   with(
