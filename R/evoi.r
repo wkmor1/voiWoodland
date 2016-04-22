@@ -1,7 +1,79 @@
+#' Expected Value of Information
+#'
+#' Calculate the expected value of information for box ironbark and woodland 
+#' management
+#'
+#' @param data Input and output data as a single data.frame.
+#' @param ncores Interger. Number of cpu cores.
+#' @param max_eco Numeric. Maximum proportion of the landscape allocatable to 
+#'        thinning.
+#' @param type Character. Type of evoi analysis.
+#' @param parameter_list list. When \code{type = "evpxi_list"} a list of
+#'        parameter sets must be supplied where the list elements are named
+#'        vectors of parameter where the names correspond to the action the
+#'        parameter of interest associated with.
+#' 
 #' @importFrom dplyr arrange distinct select_
 #' @importFrom parallel mclapply
 #' @importFrom tidyr spread_
 #' @importFrom stats predict
+
+#' @export
+
+evoi <-
+  function(
+    data, ncores = 1, max_eco = .2, 
+    type = c("evpi", "evwoi", "evpxi_list", "evpxi"),
+    parameter_list = NULL
+  ) {
+    
+    type <- match.arg(type)
+    
+    with(
+      data,
+      {
+        actions <- unique(action)
+        
+        data <-
+          lapply(
+            actions,
+            function(x) {
+              data <-
+                spread_(
+                  data[data[, "action"] == x, ],
+                  "parameter",
+                  "parameter_value"
+                )
+              data  <- arrange(data, sample, run)
+              data[, setdiff(colnames(data), c("action", "run", "sample"))]
+            }
+          )
+        
+        models <- lapply(data, fit_earth, "outcome")
+        parameters <- lapply(data, select_, paste0("-", "outcome"))
+        parameters <- lapply(parameters, distinct)
+        outcomes <- mapply(predict, models, parameters)
+        n_samples <- length(unique(sample))
+        colnames(outcomes) <- names(models) <- names(parameters) <- actions
+        
+        out <-
+          lapply(
+            max_eco,
+            evoi_,
+            outcomes,
+            parameters,
+            models,
+            n_samples,
+            actions,
+            ncores,
+            type,
+            parameter_list
+          )
+        
+        do.call(rbind, out)
+      }
+    )
+  }
 
 o2v <- function(outcomes, max_eco) {
   with(
@@ -147,61 +219,5 @@ fit_earth <-
       x      = x[, setdiff(colnames(x), outcome)],
       y      = x[, outcome],
       degree = 5
-    )
-  }
-
-#' @export
-evoi <-
-  function(
-    data, ncores = 1, max_eco = .2, 
-    type = c("evpi", "evwoi", "evpxi_list", "evpxi"),
-    parameter_list = NULL
-  ) {
-
-    type <- match.arg(type)
-
-    with(
-      data,
-      {
-        actions <- unique(action)
-
-        data <-
-          lapply(
-            actions,
-            function(x) {
-              data <-
-                spread_(
-                  data[data[, "action"] == x, ],
-                  "parameter",
-                  "parameter_value"
-                )
-              data  <- arrange(data, sample, run)
-              data[, setdiff(colnames(data), c("action", "run", "sample"))]
-            }
-          )
-
-        models <- lapply(data, fit_earth, "outcome")
-        parameters <- lapply(data, select_, paste0("-", "outcome"))
-        parameters <- lapply(parameters, distinct)
-        outcomes <- mapply(predict, models, parameters)
-        n_samples <- length(unique(sample))
-        colnames(outcomes) <- names(models) <- names(parameters) <- actions
-
-        out <-
-          lapply(
-            max_eco,
-            evoi_,
-            outcomes,
-            parameters,
-            models,
-            n_samples,
-            actions,
-            ncores,
-            type,
-            parameter_list
-          )
-
-        do.call(rbind, out)
-      }
     )
   }

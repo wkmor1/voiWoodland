@@ -36,29 +36,31 @@ To calculate the EVWOI we first average across the rows (down the columns) to as
 EVPXI requires a slightly more complicated algorithm. The EVWOI in equation 4, which is used to calculate EVPXI can be calculated as above. However, calculating the EVWPXI for the $i^{th}$ parameter(s) requires the algorithm which we outline in pseudo-code in Box 1.
 
 ******
+
 #### Box 1: Calculating EVWPXI$_i$
 
 __For each parameter value,__ $p$ from 1 to 375
 
-&emsp; Step 1. Set parameter(s) $i$ to parameter value $p$.
+$\quad$ Step 1. Set parameter(s) $i$ to parameter value $p$.
 
-&emsp; __For each parameter value,__ $p'$ from 1 to 375
+$\quad$ __For each parameter value,__ $p'$ from 1 to 375
 
-&emsp; &emsp; Step 2. Set parameters $c$ to parameter value $p'$.
+$\quad$ $\quad$ Step 2. Set parameters $c$ to parameter value $p'$.
 
-&emsp; &emsp; Step 3. Predict the proportion of BIFAW in a mature state with the parameters set in steps 1 and 2.
+$\quad$ $\quad$ Step 3. Predict the proportion of BIFAW in a mature state with the parameters set in steps 1 and 2.
 
-&emsp; &emsp; Step 4. Record the value of each potentially optimal management strategy : $Value$.
+$\quad$ $\quad$ Step 4. Record the value of each potentially optimal management strategy : $Value$.
 
-&emsp; __end loop__
+$\quad$ __end loop__
 
-&emsp; Step 5. Average the result of step 4 across each parameter value $p'$ : $Mean_{s_c}(Value)$.
+$\quad$ Step 5. Average the result of step 4 across each parameter value $p'$ : $Mean_{s_c}(Value)$.
 
-&emsp; Step 6. Record the maximum expected value from step 5 : $Max_a[Mean_{s_c}(Value)]$.
+$\quad$ Step 6. Record the maximum expected value from step 5 : $Max_a[Mean_{s_c}(Value)]$.
 
 __end loop__
 
 Average the result of step 6 across each parameter value $p$ : $Mean_{s_i}\{Max_a[Mean_{s_c}(Value)]\}$.
+
 ******
 
 Using the algorithm above we calculated the EVPXI for all 169 transition probabilities. Using the same algorithm we then calculated the EVPXI for pairs of parameters simultaneously. First we took the top two most valuable transition probabilities that transition away from each of the four woodland states and calculated their simultaneous EVPXI. Then we did the same for the top pair of of parameters for each management strategy. With these results we can see which state or management strategy it would be most beneficial to focus on for learning.

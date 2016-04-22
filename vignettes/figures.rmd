@@ -41,7 +41,7 @@ scale_y_continuous(
   labels = scales::percent
 ) + 
 scale_fill_grey() +
-ylab("") +
+xlab("") +
 guides(fill = FALSE) +
 facet_wrap(~type, ncol = 1, scales = "free") +
 theme_bw()
