@@ -1,14 +1,14 @@
-```{r managment_plot_caption, echo = FALSE}
+```{r managment_plot_caption}
 management_plot_caption <- 
   "Ternary diagram highlighting the feasible region of managment (maximum allowed thinning of 20%) and the four vertices representing potential optimal solutions to the decision problem."
 ```
 
-```{r plot1_caption, echo = FALSE}
+```{r results_plot1_caption}
 plot1_caption <- 
   "The expected value of partial perfect information for the top four transition probabilities on their own (top panel), the top two transition probabilities out of each state (middle panel) and the top two transition probabilities for each management option (bottom row) compared with the expected value of perfect information (EVPI)."
 ```
 
-```{r plot2_caption, echo = FALSE}
+```{r results_plot2_caption}
 plot2_caption <-
   "Response of the expected value information to changing the constraint on the allowable proportion  of the BIFAW to undergo ecological thinning."
 ```

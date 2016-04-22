@@ -1,5 +1,5 @@
 
-```{r management_plot, fig.cap = management_plot_caption, echo = FALSE, warning = FALSE}
+```{r management_plot, fig.cap = management_plot_caption}
 ggtern(
   data = 
     data_frame(
@@ -32,7 +32,7 @@ theme(
 )
 ```
 
-```{r results_plot1, fig.cap = results_plot1_caption, echo = FALSE}
+```{r results_plot1, fig.cap = results_plot1_caption}
 ggplot(evi) +
 aes(parameters, evi, width = width, fill = evpi) +
 geom_bar(stat = "identity") +
@@ -47,7 +47,7 @@ facet_wrap(~type, ncol = 1, scales = "free") +
 theme_bw()
 ```
 
-```{r results_plot2, fig.cap = results_plot2_caption, echo = FALSE}
+```{r results_plot2, fig.cap = results_plot2_caption}
 ggplot() +
 aes(x = max_eco, y = evi) +
 geom_line(
