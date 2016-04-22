@@ -73,6 +73,7 @@ evoi_ <-
 
     switch(
       type,
+
       evpi =
         {
           evwpi <- mean(apply(value, 1, max))
@@ -84,6 +85,14 @@ evoi_ <-
             stringsAsFactors = FALSE
           )
         },
+
+      evwoi = 
+        data.frame(
+          parameters = "EVWOI",
+          max_eco    = max_eco,
+          evi        = evwoi,
+          stringsAsFactors = FALSE
+        ),
 
       evpxi_list =
         {
@@ -144,7 +153,8 @@ fit_earth <-
 #' @export
 evoi <-
   function(
-    data, ncores = 1, max_eco = .2, type = c("evpi", "evpxi_list", "evpxi"),
+    data, ncores = 1, max_eco = .2, 
+    type = c("evpi", "evwoi", "evpxi_list", "evpxi"),
     parameter_list = NULL
   ) {
 

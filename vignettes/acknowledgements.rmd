@@ -1,0 +1,4 @@
+Acknowledgements
+================
+
+We acknowledge Christina Czembor for conducting the initial research upon which these analyses are based. We also thank Patrick Piggot and Parks Victoria for their assistance. This work was supported by the Australian Research Council through the Centre of Excellence in Environmental Decisions and Linkage Project LP110100321; and the Victorian Department of Sustainability and Environment.

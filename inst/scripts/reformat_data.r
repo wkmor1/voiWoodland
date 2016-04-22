@@ -42,4 +42,12 @@ bifaw$parameter <-
   gsub("MAT", "MLDW", .) %>%
   gsub("REG", "HDRG", .)
 
+bifaw <-
+  list(
+    inputs =
+      distinct(select(bifaw, action, parameter, sample, parameter_value)),
+    outputs =
+      distinct(select(bifaw, action, sample, run, outcome))
+  )
+
 save(bifaw, file = "data/bifaw.rda")

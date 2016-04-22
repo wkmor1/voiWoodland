@@ -1,54 +1,57 @@
 ---
-title: "The value of information for woodland management: optimally updating a state and transition model"
+title: "The value of information for woodland management: updating a state and transition model"
 author: "William K. Morris, Michael C. Runge & Peter A. Vesk"
-date: '`r Sys.Date()`'
+date: "`r Sys.Date()`"
 output:
-  html_document:
-    fig_caption: yes
-    fig_height: 5
-    fig_width: 7
-    theme: journal
   pdf_document:
     fig_caption: yes
-    fig_height: 5
-    fig_width: 7
+    citation_package: natbib
+    keep_tex: true
 header-includes:
-- \linespread{1.9}\selectfont
+- \linespread{2}\selectfont
 - \usepackage{setspace}
-- \usepackage{caption}
-- \captionsetup{font={stretch=1.9}}
+- \usepackage[labelsep = none, textformat = empty]{caption}
+- \usepackage[nomarkers]{endfloat}
+- \AtBeginDelayedFloats{\linespread{2}}
+- \usepackage{lineno}
+- \linenumbers
 bibliography: voiWoodland.bib
+biblio-style: apalike
 ---
 
-```{r setup, echo = FALSE, message = FALSE}
-knitr::opts_chunk$set(cache = TRUE)
-library(voiWoodland)
-library(dplyr)
-library(ggplot2)
+```{r analyses, child = "analyses.rmd"}
 ```
-
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  TeX: { equationNumbers: { autoNumber: "AMS" } }
-});
-</script>
+\newpage
 
 ```{r abstract, child = "abstract.rmd"}
 ```
+\newpage
 
 ```{r introduction, child = "introduction.rmd"}
 ```
+\newpage
 
 ```{r methods, child = "methods.rmd"}
 ```
+\newpage
 
 ```{r results, child = "results.rmd"}
 ```
+\newpage
 
 ```{r discussion, child = "discussion.rmd"}
 ```
+\newpage
 
-Acknowledgements
+```{r acknowledgements, child = "acknowledgements.rmd"}
+```
+\newpage
+
+```{r captions, child = "captions.rmd"}
+```
+
+```{r figures, child = "figures.rmd"}
+```
+
+Literature cited
 ================
-
-We acknowledge Christina Czembor for conducting the initial research upon which these analyses are based. We also thank Patrick Piggot and Parks Victoria for their assistance. This work was supported by the Australian Research Council through the Centre of Excellence in Environmental Decisions and Linkage Project LP110100321; and the Victorian Department of Sustainability and Environment.

@@ -1,136 +1,19 @@
 Discussion
 ==========
 
-The most important implication of these analyses for managers is that
-the most cost-effective strategies did not include either the most
-desired forest state (mature low-density woodlands), nor what would be
-thought of as the least understood management strategy (ecological
-thinning). As such, managers cannot just rely on intuition to tell them
-where the most value of information is. Critical uncertainties (those
-uncertainties that affect decision making) in a complex system might be
-not be the most variable, or the uncertainties to which outcomes are
-most sensitive. The relationship between value of information and level
-of management constraint is also important.
+The most important implication of these analyses for managers, is that the most cost-effective strategies did not include either the most desired states (mature low-density or high-density woodlands), nor what would be thought of as the least understood management strategy (thinning). As such, managers cannot just rely on intuition to tell them where the most value of information is. Critical uncertainties (those uncertainties that affect decision making) in a complex system might be not be the most variable, or the uncertainties to which outcomes are most sensitive.
 
-We have identified those aspects of the BIFAW system model that have the
-greatest value for learning. If monitoring was targeted at the most
-valuable parameters according to the EVPXI analysis, rather than a
-random parameter or even the most uncertain parameter, then the expected
-performance of a subsequent decision would be greater by up to 7500
-hectares of mature low-density woodland (difference between most and
-least valuable parameters) given the number of management options and
-constraint we used here, which is an average of 50 hectares per year.
+We have identified those aspects of the BIFAW system model that have the greatest value for learning. If monitoring was targeted at the most valuable parameter according to the EVPXI, rather than a random parameter or even the most uncertain parameter, then the expected performance of a subsequent decision would be greater by up to `r fmt(evpxi_all[1, "evi"] * area)` hectares of mature woodland given the number of management options and constraint we used here, which is an average of `r fmt(evpxi_all[1, "evi"] * area / 150)` hectares per year.
 
-We have also shown that if learning is targeted at subsets of the
-system, so as to update multiple parameters simultaneously, then some
-system states and management options would be better foci than others.
-This is because the uncertainty of some parameter sets is more critical
-to management decisions than others. Managers would be wiser to focus
-monitoring on areas subject to management under the harvest management
-scenario rather than the thinning or no management options, because
-learning by reducing the uncertainty in the parameters associated with
-those latter options would not change the decision about which
-management option to use as much on average if their uncertainty was
-reduced. Also, if managers chose only to monitor one system state, then
-learning about transitions from the low-density regrowth state would see
-greater expected benefit than the other three states.
+We have also shown that if learning is targeted at subsets of the system, so as to update multiple parameters simultaneously, then some system states and management options would be better foci than others. This is because the uncertainty of some parameter sets is more critical to management decisions than others. Managers would be wiser to focus monitoring on areas subject to management under the HF scenario rather or ET or NM options, because learning by reducing the uncertainty in the parameters associated with those latter options would not change the decision about which management option to use as much on average if their uncertainty was reduced. Also, if managers chose only to monitor one system state, then learning about transitions from the low-density regrowth state would see greater expected benefit than the other three states.
 
-However, where the highest value of information lies depends on the
-number and range of management options. In other words, the options
-available to managers drive the value of information, as does the
-uncertainty they have in the outcome of their potential decisions. The
-greater the number and range of management options, the greater the
-value of information, because the more options you have the more
-potential there is for learning which option is the best. Taken to an
-extreme, if you have only one option (i.e., no decision) then learning
-would be pointless and the value of information would be zero. In the
-present case, when more thinning was permitted, the greatest increase in
-EVPXI was for the parameter predicting a transition after thinning took
-place (Fig \[fig:evi\_cc\_plot\]). Parameters not associated with
-thinning either increased in their EVSI at slower rates or didn’t change
-at all.
+However, the value of information depends on the number and range of management options. In other words, the options available to manager can drive the value of information. The greater the number and range of management options, the greater the value of information, because the more options you have the more potential there is for learning which option is the best. Taken to an extreme, if you have only one option (i.e., no decision to make) then learning would be pointless and the value of information would be zero. In the present case, when more thinning was permitted, EVPI and the EVPXI of the parameter predicting a transition after thinning increased linearly whereas the EVPXI of parameters not associated with thinning didn't change at all (Fig 3).
 
-We found variability in the EVPXI for parameters of the BIFAW system.
-Those with the greatest expected value of information were often those
-with uncertainty to which the system was most sensitive, but not always.
-Similarly, @Moore2012 found that the main drivers of willow invasion
-were not necessarily the same as those that there was most value in
-learning about. In their case, while fire frequency was a driver of
-invasion, it was willow tree seed dispersal that had the greatest value
-of information. These results highlight that for optimal decision making
-it is not enough to simply identify those aspects of the system to which
-objectives are most sensitive. In the context of decision making, the
-expected value of information is a better measure of sensitivity than a
-simple sensitivity analysis because it can distinguish between
-decision-critical uncertainty and mere uncertainty [@Felli1998].
+We found variability in the EVPXI for parameters of the BIFAW system. Those with the greatest expected value of information were often those with uncertainty to which the system was most sensitive, but not always. Similarly, @Moore2012 found that the main drivers of willow invasion were not necessarily the same as those that there was most value in learning about. In their case, while fire frequency was a driver of invasion, it was willow tree seed dispersal that had the greatest value of information. These results highlight that for optimal decision making it is not enough to simply identify those aspects of the system to which objectives are most sensitive. In the context of decision making, the expected value of information is a better measure of sensitivity than a simple sensitivity analysis because it can distinguish between decision-critical uncertainty and mere uncertainty [@Felli1998].
 
-A key advance we have made in this work is to formulate a process for
-calculating VOI for complex models with continuous expressions of
-uncertainty. For such models the state space is too large to make
-integration feasiable for the VOI analyses and Monte Carlo methods must
-be used instead. However, Monte Carlo sampling is computationally
-expensive and it can be prohibitively time-consuming to refit a complex
-model repeatedly (which is necessary for a Monte Carlo simulation). To
-overcome this, we represented the state and transition model with an
-efficient machine-learning method (MARS) and use the output from this in
-our Monte Carlo approxmation of the VOI analysis. The method we present
-here, employing Monte Carlo simulation and machine learning, can be used
-a template for VOI analyses of complex models with continuous
-expressions of uncertainty and extended to other forms VOI including the
-expected value of sample information.
+A key advance we have made in this work is to formulate a process for calculating VOI for complex models with continuous expressions of uncertainty. For such models the state space is too large to make analytical integration feasible for the VOI analyses and numerical methods must be used instead. However, such an approach can be computationally expensive models such as state and transition models as it is prohibitively resource-consuming to refit a complex model repeatedly. To overcome this, we represented the state and transition model with an efficient regression method (MARS) and use the output from this in our calculations of the EVI. The method we present can be used a template for VOI analyses of complex models with continuous expressions of uncertainty.
 
-In the analyses we have presented here, we have not accounted for
-correlations among the transition probabilities. Experts that gave a
-particular value for one parameter were often more likely to have given
-a particular value for another parameter. We were unable to account for
-within-expert correlations among parameters when we updated them in the
-posterior analyses. The issue of within-expert correlation is not well
-studied. Though others have assessed the related case of between-expert
-correlation in parameter estimation [e.g., @Zio1997].
+The analyses we performed required us to make assumptions regarding the monitoring to update the parameters in the model. For monitoring to take place in the manner described, vegetation states must be able to easily be determined in the field. In addition they must be identifiable to a degree of accuracy that they can be distinguished from one another so that a transition between states is evident and recordable after revisits occurring in a short space of time. States must not only themselves be identifiable, but the surveyor must also be able to tell that a unit of vegetation has been in a state for the required period of time for a specific transition to occur, and that any transition that does occur has occurred due to a specific causal agent. For some transition probabilities this set of assumptions seems plausible. For instance, the transition from low to high-density regrowth due to coppicing may not be that hard to identify and record, whereas recognizing that a unit of vegetation remained as low-density regrowth because of combination of drought and mistletoe may be far more difficult. This problem arises because state-transition models are only supposed to represent vegetation dynamics on average and do necessarily reflect observable phenomenon.
 
-It may be justified to ignore the expert driven correlation among
-parameters. An expert could be knowledgeable about one part of the
-system and relatively ignorant of another part, with other experts
-having reverse properties. Therefore, hybrid models that combine the
-uncertainty of multiple experts are just as plausible, or more so, than
-the opinion of any one expert. On the other hand one might have faith in
-within-expert parameter correlations in general, because if an expert is
-right or wrong about one component of a system they could be similarly
-right or wrong about other aspects.
-
-The preposterior analyses we performed required us to make assumptions
-regarding the monitoring to update the parameters in the model. For
-monitoring to take place in the manner described, vegetation states must
-be able to easily be determined in the field. In addition they must be
-identifiable to a degree of accuracy that they can be distinguished from
-one another so that a transition between states is evident and
-recordable after revisits occurring in a short space of time. States
-must not only themselves be identifiable, but the surveyor must also be
-able to tell that a unit of vegetation has been in a state for the
-required period of time for a specific transition to occur, and that any
-transition that does occur has occurred due to a specific causal agent.
-For some transition probabilities this set of assumptions seems
-plausible. For instance, the transition from low to high-density
-regrowth due to coppicing may not be that hard to identify and record,
-whereas recognizing that a unit of vegetation remained as low-density
-regrowth because of combination of drought and mistletoe may be far more
-difficult. This problem arises because state-transition models are only
-supposed to represent vegetation dynamics on average and do necessarily
-reflect observable phenomenon.
-
-In summary we would recommend a value of information analyses be
-performed to inform monitoring and even decide whether it should take
-place at all. We have shown that it can be used to identify which parts
-of a complex model system are most valuable to address. Here, given the
-assumptions we have outlined above, managers should focus scarce
-monitoring resources first on the harvest management option (if that
-option is on the table) and the low-density regrowth states. Here we
-have demonstrated how Monte Carlo simulation methods can be used to
-overcome the challenges of implementing a VOI analyses for a complex,
-continuous model. We caution, that the findings are dependent on the
-objective and the number of management options available. We have
-highlighted this dependence by demonstrating how the value of
-information changes differentially among model parameters, as the
-constraints on the decision are modified. Managers should be careful to
-not jump to conclusions about which uncertainties are critical to a
-decision, as in a complex system, those uncertainties may be cryptic.
+In summary we would recommend a value of information analyses be performed to inform monitoring and even decide whether it should take place at all. We have shown that it can be used to identify which parts of a complex model system are most valuable to address. Here, given the assumptions we have outlined above, managers should focus scarce monitoring resources first on the harvest management option (if that option is on the table) and the low-density regrowth states. Here we have demonstrated how to overcome the challenges of implementing a VOI analyses for a complex,
+continuous model.

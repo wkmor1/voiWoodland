@@ -1,142 +1,22 @@
-```{r, echo = FALSE}
-library(voiWoodland)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
-```
+Results
+=======
 
-```{r}
-parameters_df <- unique(bifaw$parameter)
+EVWOI
+-----
 
-parameters_df <-
-  regexec(
-    "([A-Za-z]*)([A-Z]{4})to([A-Z]{4})given([A-Z]{2})then(.*)",
-    parameters_df
-  ) %>%
-  regmatches(parameters_df, .) %>%
-  do.call(rbind, .) %>%
-  data.frame(stringsAsFactors = FALSE) %>%
-  setNames(c("parameters", "type", "from", "to", "action", "cause"))
-```
+With the original information elicited from the five experts, the optimal decision would be to put 100% of the BIFAW under the NM option regardless of the constraint applied to the ET option. Given the optimal decision is made with the original information, managers would expect, on average, to see approximately `r round(evwoi * 100)`% of the BIFAW in a mature state after 150 years. This represents a land area of `r fmt(area * evwoi)` ha, a `r fmt(area * (evwoi- ini_pc))` ha increase over the initial amount (`r fmt(area * ini_pc)` ha, `r fmt(ini_pc * 100)`%) estimated by the five experts.
 
-```{r, echo = FALSE}
-evpxi_all <-
-  evoi(bifaw, type = "evpxi", ncores = 60) %>%
-  left_join(parameters_df) %>%
-  filter(type == "Probability") %>%
-  arrange(desc(evi))
+EVPI
+-----
 
-action_list <- 
-  with(
-    evpxi_all,
-    tapply(parameters, action, head, 2) %>%
-    lapply(function(x) setNames(x, action[parameters %in% x]))
-  )
+If the managers of the BIFAW had perfect knowledge and could at most, thin at rate of 20%, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha) this means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure 2).
 
-state_list <-
-  with(
-    evpxi_all,
-    tapply(parameters, from, head, 2) %>%
-    lapply(function(x) setNames(x, action[parameters %in% x]))
-  )
+EVPXI
+-----
+Of the 169 transition probabilities most, but not all, had zero or negligible EVPXI (i.e., EVWXI$_i$ $\approx$ EVWOI). Figure 1 (top panel) shows the top four most valuable parameters, while remaining parameters had EVPI of %1 or less, notably, one parameter (the probability of woodland transitioning from a low-density to a high density regrowth state, due coppicing of tree stems, when the BIFAW is left unmanaged) was `r round(evpxi_all[1, "evi"] * 100)`%. To managers, this means if they could completely resolve the uncertainty in this parameter alone they would expect to manage the BIFAW so much more optimally that on average they would see `r fmt(evpxi_all[1, "evi"] * area)` ha more mature woodland in 150 years than if they managed the forest under their initial level of uncertainty.
 
-evpxi_actions <-
-  evoi(bifaw, type = "evpxi_list", parameter_list = action_list)
+EVI when constraint on management changes
+-----------------------------------------
 
-evpxi_states <-
-  evoi(bifaw, type = "evpxi_list", parameter_list = state_list)
+Figure 3 shows the effect of changing the allowable amount of thinning of the BIFAW from 10 to 100% on EVPI and the most valuable parameter (according to the EVPXI analysis above) for each management action. Note that while both increase linearly as the constraint is lifted those parameters unrelated to the ET remain the same despite the change in the feasible region.
 
-evpi <- evoi(bifaw)
-
-types <- c("Managements actions", "Initial states", "Transition probabilities")
-
-evi <-
-  bind_rows(evpi, evpxi_actions, evpxi_states) %>%
-  full_join(evpxi_all) %>%
-  filter(evi > 0) %>%
-  slice(c(1, 1, 1:12)) %>%
-  mutate(
-    type = c(types, rep(types, each = 4)[-1]),
-    parameters = 
-      ifelse(
-        !is.na(from),
-        paste0(cause, " (", action, ")\n", from, "-", to),
-        parameters
-      ),
-    width = ifelse(type == "Action", .72, .9),
-    evpi = parameters == "EVPI"
-  ) %>%
-  mutate(
-    type = factor(type, levels = rev(types)),
-    parameters = 
-      factor(
-        parameters, 
-        levels = unique(parameters[order(evi, decreasing = TRUE)])
-      )
-  )
-
-```
-
-```{r, echo = FALSE}
-ggplot(evi) +
-aes(parameters, evi, width = width, fill = evpi) +
-geom_bar(stat = "identity") +
-scale_y_continuous(
-  "Expected Value of Information",
-  labels = scales::percent
-) +
-scale_fill_grey() +
-xlab("") +
-guides(fill = FALSE) +
-facet_wrap(~type, ncol = 1, scales = "free")
-```
-
-
-```{r, echo = FALSE}
-evpi_df <- evoi(bifaw, max_eco = seq(.1, 1, .1))
-evpxi_df <- evoi(bifaw, max_eco = seq(.1, 1, .1), ncores = 60,type = "evpxi")
-```
-
-```{r, echo = FALSE}
-evdf <- unique(bifaw$parameter)
-
-evdf <-
-  regexec(
-    "([A-Za-z]*)([A-Z]{4})to([A-Z]{4})given([A-Za-z]*)then([A-Za-z]*)",
-    evdf
-  ) %>%
-  regmatches(evdf, .) %>%
-  do.call(rbind, .) %>%
-  data.frame(stringsAsFactors = FALSE) %>%
-  setNames(c("parameters", "type", "from", "to", "action", "cause")) %>%
-  merge(evpxi_df) %>%
-  filter(evi > 0, type == "Probability")
-
-top_params <-
-  with(evdf, tapply(evi, list(parameters, action), max)) %>%
-  {rownames(.)[apply(., 2, which.max)]}
-
-evdf <- filter(evdf, parameters %in% top_params)
-```
-
-```{r, echo = FALSE}
-ggplot() +
-aes(x = max_eco, y = evi) +
-geom_line(
-  data = evpi_df,
-  size = 1.25,
-  col = "grey"
-) +
-geom_line(
-  aes(linetype = action),
-  data = evdf,
-  size = 1.25
-) +
-scale_linetype_discrete(name = "Action", guide = guide_legend(keywidth = 2)) +
-scale_x_continuous(
-  "Maximum allowed ecological thinning",
-  labels = scales::percent
-) +
-scale_y_continuous("EVI", labels = scales::percent) +
-theme_bw()
-```

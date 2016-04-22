@@ -1,196 +1,66 @@
-Materials and methods
-=====================
+Methods
+=======
 
 Decision problem
 ----------------
 
-The fundamental objective of the BIFAW region managers are to ensure the
-persistence of key, functioning communities and species populations of
-the region. Managers have determined that the means of achieving these
-objectives is to maximise the proportion of the landscape in a
-mature-low density state which supports key habitat components such as
-hollow bearing trees and a diverse shrubby understory. They have three
-management actions available to achieve this objective: no
-management/allow natural disturbance only, allow limited
-harvest/firewood removal and thinning. There are two management agencies
-operating in the BIFAW who have different operating constraints that
-determine which management actions they can use in the parts of the
-BIFAW they manage (see below).
+The fundamental objective of the BIFAW region managers are to ensure the persistence of key, functioning communities and species populations of the region. Managers have determined that the means of achieving these objectives is to maximize the proportion of the landscape in a mature woodland (either high or low-density) state which supports key habitat components such as hollow bearing trees and a diverse shrubby understory. They have three management actions available to achieve this objective: no management/allow natural disturbance only, allow limited harvest/firewood removal and thinning.
 
-Approximating BIFAW state and transition model output with multivariate adaptive regression splines
----------------------------------------------------------------------------------------------------
+Therefore, for the following analyses, the optimization steps have the objective of maximizing the proportion of the BIFAW in either low-density or high-density mature woodland. Also, for the analyses that follow, we place the constraint that only 20% of the BIFAW can be 'thinned' (managers use the ET option) as a larger proportion seems infeasible. However, we also test this constraint by varying the allowable proportion of thinning from 10 to 100% (see below). 
 
-The system model we used to make predictions of BIFAW management
-decision outcomes was a set of multivariate adaptive regression splines
-(MARS) [@Friedman1991] fit to simulation data from the state and
-transition models of @Czembor2011. We chose to represent the state and
-transitions using MARS rather than run further state and transition
-model simulations as the latter would be computationally infeasible
-given the large number of Monte Carlo simulations needed for the
-analyses that follow.
+The case study, as outlined here, falls in class of problems known as linear optimizations, as such the solutions to the objective maximization will always lie on one of the vertices of the feasible region of management. In other words, the action that maximizes the objective will be be either 100% NM, 100% HF, 20% ET and 80% NM or 20% ET and 80% HF (or the equivalent proportions when the constraint on ET is different; Figure 1.).
 
-The state and transition models predicted the proportion of land in four
-vegetation states at yearly intervals over a 150 year time horizon. The
-four states in the models were high-density regrowth (HDRG), low-density
-regrowth (LDRG), mature high-density woodland (MHDW), and mature
-low-density woodland (MLDW). The transition probabilities among these
-states for each of the three management actions were parameterized by
-five experts [@Czembor2009]. Transition probabilities were elicited for
-a set of causal agents [see Table 1 in @Czembor2009]. Combining
-transition types, management scenarios, and causal agents, there were
-169 different transition probability parameters elicited from each of
-the five experts. There were other parameter types included in the state
-and transition models, but for simplicity we focus solely on the
-transition probabilities. For each parameter, the experts individually
-provided upper and lower plausible bounds. Given these bounds and
-assuming they represented the 80, 90 and 95% credible intervals of
-underlying beta distributions, 25 random samples were drawn for each
-parameter, assuming each of the credible intervals, from those assumed
-distributions. @Czembor2011 used the 375 (5 experts, times 3 credible
-intervals, times 25 random samples) as alternative parameterizations to
-simulate BIFAW forest dynamics with the software package Vegetation
-Dynamics Development Tool (VDDT) [@ESSA2007].
+Predicting the outcome of management under uncertainty
+------------------------------------------------------
 
-Here we used the output from ten stochastic VDDT simulations for each of
-the 375 parameterizations to fit MARS models for each management action
-separately. For each of the MARS models the response (n=3750) was the
-proportion of the model landscape in the MLDW state with the VDDT
-parameters used as the predictors. To capture the modelled stochasticity
-of the state and transition models, each MARS model was bootstrapped 9
-times using standard bootstrap sampling (i.e., a random sample, with
-replacement, of the dataset). All analyses were done using the
-statistical computing language R version 3.0.2 [@R2013] with the MARS
-models fit using the software package ‘earth’ version 3.2-6
-[@Milborrow2013].
+The system model we used to make predictions of BIFAW management decision outcomes were multivariate adaptive regression splines (MARS) [@Friedman1991], a regression modelling technique, fit to the output data from the state and transition models of @Czembor2011. We chose to represent the state and transitions using MARS rather than run further state and transition models as the latter would be computationally infeasible given the large number repeated model runs needed for the analyses.
 
-Sensitivity analysis
---------------------
+The state and transition models predicted the proportion of the modeled BIFAW landscape in four vegetation states after 150 years. The four states in the models were high-density regrowth (HDRG), low-density regrowth (LDRG), high-density mature woodland (HDMW), and low-density mature woodland (MLDW). The transition probabilities among these states for each of the three management actions were parameterized by five experts [@Czembor2009]. Transition probabilities were elicited for a set of causal agents. The set of transition probabilities was different for each of the three management scenario [see Table 1 in @Czembor2009]. Combining transition types, management scenarios, and causal agents, there were 169 different transition probability parameters elicited from each of the five experts. There were other parameter types included in the state and transition models, but for simplicity we focus solely on the transition probabilities.
 
-We conducted a sensitivity analysis to reveal which parameters affect
-the outcome of management (proportion of land in the desired, mature
-low-density woodland, state after 150 years) and therefore which
-parameters are the best candidates for learning and reducing
-uncertainty. For each candidate parameter we used the bootstrapped MARS
-models to predict the outcome of the relevant management scenario with
-the focal parameter iteratively fixed at ten equidistant intervals
-across the plausible range previously specified by the experts, with all
-other parameters having the uncertainty as originally specified by the
-experts. We chose the range of median predicted proportion of the MLDW
-state as the measure of sensitivity. Those focal parameters to which the
-outcome was most sensitive had greater ranges of median predictions when
-the focal parameter was changed. Using the results of the sensitivity
-analyses we were able to rule out relatively unimportant parameters and
-exclude them from further analysis. As a cutoff we only used parameters
-in the value of information analyses that had sensitivity of .01 or
-greater. In other words, changing those parameters could result in at
-least a 1% change in the area expected in the desired state after 150
-years.
+The expert elicitation resulted in 375 separate estimates of each transition probability. And it is the distribution of these 375 estimates that constitutes the initial uncertainty of the decision model in this case study. These estimates can be thought of as 375 alternative scenarios for the trajectory of the BIFAW over the next 150 years. This is much like a climate modelling may produce multiple alternative trajectories of the climate into the future under different warming scenarios.
 
-Expected value of information
------------------------------
+@Czembor2011 used the 375 as alternative parameterizations to simulate BIFAW forest dynamics with the state and transition modelling software package, Vegetation Dynamics Development Tool (VDDT) [@ESSA2007] running the model ten times for each scenario. Here, we took the output from their simulations and fit MARS models for each management action
+separately. For each of the MARS models the response ($n=375\times10=3750$) was the proportion of the model landscape in the two mature woodland states combined. The predictors were the model parameters (including but not limited to the transition probabilities).
 
-To calculate EVPXI for each candidate parameter we used a Monte Carlo
-sampling method to perform a Bayesian preposterior analysis. A
-preposterior analysis can be used to predict the value of new
-information before it is collected, by generating a set of plausible
-posterior distributions that could be arrived at after new information
-is obtained, and integrating over all possible realisations of the new
-informations. Preposterior analyses using Monte Carlo methods require
-five steps: repeated random sampling from a prior distribution of the
-model parameters, simulating experimental outcomes assuming the samples
-from the prior are the true state of the system, calculating a posterior
-distribution for the parameters using Bayes’s rule considering the
-experimental outcomes as observations to update the prior with,
-determining the action with the highest expected utility in the face of
-any remaining uncertainty, and integrating the posterior utilities over
-the prior distribution [@Berger1985].
+All analyses were done using the statistical computing language R version 3.2.4 [@R2015] with the MARS models fit using the software package 'earth' version 4.4.4 [@Milborrow2013].
 
-We performed such a preposterior analysis for our set of candidate
-transition probabilities. To calculate the posterior distributions, we
-considered that the expert-derived estimates of each parameter
-(transition rate) could be represented by zero-inflated beta
-distributions. The zero-inflation arises because some experts disagree
-whether or not some transitions occur at all. Therefore to calculate the
-preposterior distribution, we assumed the following: a transition event
-may occur with probability $p$, but there is a non-zero belief that
-$p = 0$. For a full description of the updating process for a zero
-inflated beta distribution see Appendix A.
+Calculating EVI
+---------------
 
-### Objective function
+### EVPI
+To calculate we applied equation 1, 2, and 3 to the outcomes of BIFAW management predicted by MARS models for each of the 375 alternative expert-derived parameterizations (which is same as the original simulated output of @Czembor2011 averaged over the 100 model runs). These data can be transformed into a 4 by 375 matrix where cells hold the predicted proportion of the landscape in a mature state, with the rows representing alternative input parameter sets and columns representing the potentially optimal solutions as in Figure 1. This matrix can then be used to both calculate EVWOI and EVWPI and by extension EVPI.
 
-We defined a simple objective function based on the strategic aim of the
-BIFAW thinning trial, with two different sets of constraints. The first
-constraint set was for a management agency that could allow the limited
-harvest/firewood removal strategy within the BIFAW, while the second
-rules out this possibility and only allows for either no
-management/protection or thinning. The first constraint set represents
-the operation of an agency such as the Victorian Department of
-Environment, Water and Planning, who still manage much of the BIFAW on
-public land not gazetted in 2002 or previously. The latter however, is
-more akin to an agency such as Parks Victoria, who would be unlikely to
-permit the harvest strategy in the reserve system they manage. For both
-constraint sets the objective was to maximise the proportion of the
-BIFAW in the desired, mature low-density woodland state after 150 years.
-Both constraint sets included the constraint that the thinning option
-could only be applied to a maximum of 20% of the BIFAW landscape.
-However we also tested the sensitivity of the results to this constraint
-across a range of 5% to 90%.
+To calculate the EVWOI we first average across the rows (down the columns) to ascertain the expected value of each potentially optimal solution. Then choose the solution with the maximum value and this will be the EVWOI. Calculating EVWPI requires the opposite approach. First we work with each row individually and choose the column that maximizes the value as if we new with certainty that the particular parameter set associated with a given row was correct. After we have maximized the value of each of the 375 alternative scenarios only then do we take the average of these which will be the EVWPI. Again the EVPI is simply the difference between these values.
 
-### Optimal allocation of management actions
+### EVPXI
+EVPXI requires a slightly more complicated algorithm. The EVWOI in equation 4, which is used to calculate EVPXI can be calculated as above. However, calculating the EVWPXI for the $i^{th}$ parameter(s) requires the algorithm which we outline in pseudo-code in Box 1.
 
-Given the objective and constraint set, we used a simplex algorithm to
-perform a constrained optimization [@Nash1990] that would find the
-allocation of the landscape to each management action that maximises the
-mature low-density woodland state after 150 years. However, the model as
-implemented can only predict the outcome of applying one management
-strategy per management unit and assumes that unit is managed the same
-way for the duration of the model run. The results may change if the
-management strategy could adapt to the state the unit is in at any given
-timestep.
+******
+#### Box 1: Calculating EVWPXI$_i$
 
-### Calculating EVI
+__For each parameter value,__ $p$ from 1 to 375
 
-Calculating the EVSI for each parameter required a set of MARS model
-predictions of MDLW proportion corresponding to the 100 posterior
-distributions for each management action. For each posterior
-distribution we used the previously fitted MARS models to predict the
-outcome of management. Predictions were made using 375 new samples from
-the posterior distribution of the focal parameter. For all other
-parameters, samples were drawn from their prior distributions. The
-remaining step of the preposterior analysis is to calculate the expected
-utility over the posterior distributions. That is, for a given
-posterior, optimise the expected value of each possible allocation and
-identify the optimal allocation. Then the utility of the best action is
-integrated over all possible parameter values via the Monte Carlo
-sampling of the prior distribution.
+&emsp; Step 1. Set parameter(s) $i$ to parameter value $p$.
 
-Calculating the EVSI for each parameter is then simply a matter of
-applying the objective function and equation \[EVSI\] to the
-preposterior predictions and equivalent predictions made under the
-prior. The objective function applied to the preposterior predictions
-corresponds to the utility, $u(a,\theta)$, of the first term in equation
-\[EVSI\] while the utility of the second term, $u(a,\theta_0)$,
-corresponded to applying the objective function with constraint sets to
-the predictions made under the joint prior distribution.
+&emsp; __For each parameter value,__ $p'$ from 1 to 375
 
-The values we report here are values of sample information assuming a
-thousand samples. In the results, we describe these values as EVPXI
-because the sample number assumed was great enough that uncertainty in
-the parameters sampled was effectively completely resolved. While it
-would be interesting to reduce the sample size for the preposterior
-analysis and calculate the EVSI across a range of sample-sizes this was
-unfortunately impractical for this case-study. The sample-sizes at which
-EVSI approaches EVPXI for a given parameter were always relatively low
-($\approx10$) and due to the imprecision of the MARS models at low
-sample-sizes EVSI would unreliable in such cases.
+&emsp; &emsp; Step 2. Set parameters $c$ to parameter value $p'$.
 
-In addition to calculating EVPXI for resolution of uncertainty about
-each parameter individually, we calculated EVPXI for seven alternative
-sampling designs that reduced uncertainty about multiple parameters by
-monitoring them simultaneously. Four sampling designs focused on the top
-two most valuable parameters in the single parameter calculation of
-EVPXI, beginning in each of the four system states. The other three
-sampling designs focused on the two most valuable parameters for each
-management action. Finally, we calculated the EVPI to assess the upper
-bound on the value of sampling to which to compare the EVPXI of
-parameters and parameter combinations.
+&emsp; &emsp; Step 3. Predict the proportion of BIFAW in a mature state with the parameters set in steps 1 and 2.
+
+&emsp; &emsp; Step 4. Record the value of each potentially optimal management strategy : $Value$.
+
+&emsp; __end loop__
+
+&emsp; Step 5. Average the result of step 4 across each parameter value $p'$ : $Mean_{s_c}(Value)$.
+
+&emsp; Step 6. Record the maximum expected value from step 5 : $Max_a[Mean_{s_c}(Value)]$.
+
+__end loop__
+
+Average the result of step 6 across each parameter value $p$ : $Mean_{s_i}\{Max_a[Mean_{s_c}(Value)]\}$.
+******
+
+Using the algorithm above we calculated the EVPXI for all 169 transition probabilities. Using the same algorithm we then calculated the EVPXI for pairs of parameters simultaneously. First we took the top two most valuable transition probabilities that transition away from each of the four woodland states and calculated their simultaneous EVPXI. Then we did the same for the top pair of of parameters for each management strategy. With these results we can see which state or management strategy it would be most beneficial to focus on for learning.
+
+Finally we recalculated the EVPI and EVPXI for all transition probabilities this time varying the constraint on the amount of ET management allowable. This has the effect of changing the size of the feasible management region and changing in the position of the two left-most vertices in Figure 1. We recalculated EVI for a maximum allowable rate of thinning from 10 to 100% in increments of 10%.

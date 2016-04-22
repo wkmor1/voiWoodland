@@ -1,0 +1,114 @@
+```{r setup, echo = FALSE}
+knitr::opts_chunk$set(
+  cache = TRUE, echo = FALSE, message = FALSE, warning = FALSE
+)
+```
+
+```{r packages}
+library(voiWoodland)
+library(dplyr)
+library(tidyr)
+library(grid)
+library(ggplot2)
+library(ggtern)
+```
+
+```{r functions}
+fmt <- function(x) format(round(x), big.mark = ",", scientific = FALSE)
+```
+
+```{r data}
+area <- 250000L
+ini_pc <- .19
+
+bifaw <- with(bifaw, left_join(inputs, outputs))
+
+parameters_df <- unique(bifaw$parameter)
+
+parameters_df <-
+  regexec(
+    "([A-Za-z]*)([A-Z]{4})to([A-Z]{4})given([A-Z]{2})then(.*)",
+    parameters_df
+  ) %>%
+  regmatches(parameters_df, .) %>%
+  do.call(rbind, .) %>%
+  data.frame(stringsAsFactors = FALSE) %>%
+  setNames(c("parameters", "type", "from", "to", "action", "cause"))
+```
+
+```{r evwoi}
+evwoi  <- evoi(bifaw, type = "evwoi")["evi"]
+```
+
+```{r results_plot1_data}
+evpi <- evoi(bifaw)
+
+evpxi_all <-
+  evoi(bifaw, type = "evpxi", ncores = 60) %>%
+  left_join(parameters_df) %>%
+  filter(type == "Probability") %>%
+  arrange(desc(evi))
+
+action_list <- 
+  with(
+    evpxi_all,
+    tapply(parameters, action, head, 2) %>%
+    lapply(function(x) setNames(x, action[parameters %in% x]))
+  )
+
+state_list <-
+  with(
+    evpxi_all,
+    tapply(parameters, from, head, 2) %>%
+    lapply(function(x) setNames(x, action[parameters %in% x]))
+  )
+
+evpxi_actions <-
+  evoi(bifaw, type = "evpxi_list", parameter_list = action_list)
+
+evpxi_states <-
+  evoi(bifaw, type = "evpxi_list", parameter_list = state_list)
+
+types <- c("Management actions", "Initial states", "Transition probabilities")
+
+evi <-
+  bind_rows(evpi, evpxi_actions, evpxi_states) %>%
+  full_join(evpxi_all) %>%
+  filter(evi > 0) %>%
+  slice(c(1, 1, 1:12)) %>%
+  mutate(
+    type = c(types, rep(types, each = 4)[-1]),
+    parameters = 
+      ifelse(
+        !is.na(from),
+        paste0(cause, " (", action, ")\n", from, "-", to),
+        parameters
+      ),
+    width = ifelse(type == "Management actions", .72, .9),
+    evpi = parameters == "EVPI"
+  ) %>%
+  mutate(
+    type = factor(type, levels = rev(types)),
+    parameters = 
+      factor(
+        parameters, 
+        levels = unique(parameters[order(evi, decreasing = TRUE)])
+      )
+  )
+```
+
+```{r results_plot2_data}
+evpi_df <- evoi(bifaw, max_eco = seq(.1, 1, .1))
+evpxi_df <- evoi(bifaw, max_eco = seq(.1, 1, .1), ncores = 60, type = "evpxi")
+
+evpxi_df <-
+  parameters_df %>%
+  merge(evpxi_df) %>%
+  filter(evi > 0, type == "Probability")
+
+top_params <-
+  with(evpxi_df, tapply(evi, list(parameters, action), max)) %>%
+  {rownames(.)[apply(., 2, which.max)]}
+
+evpxi_df <- filter(evpxi_df, parameters %in% top_params)
+```
