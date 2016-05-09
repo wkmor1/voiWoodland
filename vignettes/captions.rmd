@@ -1,10 +1,10 @@
 ```{r managment_plot_caption}
-management_plot_caption <- 
+management_plot_caption <-
   "Ternary diagram highlighting the feasible region of managment (maximum allowed thinning of 20%) and the four vertices representing potential optimal solutions to the decision problem."
 ```
 
 ```{r results_plot1_caption}
-results_plot1_caption <- 
+results_plot1_caption <-
   "The expected value of partial perfect information for the top four transition probabilities on their own (top panel), the top two transition probabilities out of each state (middle panel) and the top two transition probabilities for each management option (bottom row) compared with the expected value of perfect information (EVPI)."
 ```
 

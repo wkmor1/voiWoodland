@@ -9,11 +9,11 @@ With the original information elicited from the five experts, the optimal decisi
 EVPI
 -----
 
-If the managers of the BIFAW had perfect knowledge and could at most, thin at rate of 20%, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha) this means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure 2).
+If the managers of the BIFAW had perfect knowledge and could at most, thin an amount of 20%, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha). This means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure 2).
 
 EVPXI
 -----
-Of the 169 transition probabilities most, but not all, had zero or negligible EVPXI (i.e., EVWXI$_i$ $\approx$ EVWOI). Figure 1 (top panel) shows the top four most valuable parameters, while remaining parameters had EVPI of %1 or less, notably, one parameter (the probability of woodland transitioning from a low-density to a high density regrowth state, due coppicing of tree stems, when the BIFAW is left unmanaged) was `r round(evpxi_all[1, "evi"] * 100)`%. To managers, this means if they could completely resolve the uncertainty in this parameter alone they would expect to manage the BIFAW so much more optimally that on average they would see `r fmt(evpxi_all[1, "evi"] * area)` ha more mature woodland in 150 years than if they managed the forest under their initial level of uncertainty.
+Of the 169 transition probabilities most, but not all, had zero or negligible EVPXI (i.e., EVWXI$_i$ $\approx$ EVWOI). Figure 2 (top panel) shows the top four most valuable parameters, while remaining parameters had EVPI $<$%1. Notably, one parameter (the probability of woodland transitioning from a low-density to a high density regrowth state, due to coppicing of tree stems, when the BIFAW is left unmanaged) was `r round(evpxi_all[1, "evi"] * 100)`%. To managers, this means if they could completely resolve the uncertainty in this parameter alone they would expect to manage the BIFAW so much more optimally that on average they would see `r fmt(evpxi_all[1, "evi"] * area)` ha more mature woodland in 150 years than if they managed the forest under their initial level of uncertainty.
 
 EVI when constraint on management changes
 -----------------------------------------

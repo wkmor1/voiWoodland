@@ -8,61 +8,66 @@ The fundamental objective of the BIFAW region managers are to ensure the persist
 
 Therefore, for the following analyses, the optimization steps have the objective of maximizing the proportion of the BIFAW in either low-density or high-density mature woodland. Also, for the analyses that follow, we place the constraint that only 20% of the BIFAW can be 'thinned' (managers use the ET option) as a larger proportion seems infeasible. However, we also test this constraint by varying the allowable proportion of thinning from 10 to 100% (see below). 
 
-The case study, as outlined here, falls in class of problems known as linear optimizations, as such the solutions to the objective maximization will always lie on one of the vertices of the feasible region of management. In other words, the action that maximizes the objective will be be either 100% NM, 100% HF, 20% ET and 80% NM or 20% ET and 80% HF (or the equivalent proportions when the constraint on ET is different; Figure 1.).
+The case study, as outlined here, falls in class of problems known as linear optimizations. As such, the solutions to the objective maximization will always lie on one of the vertices of the feasible region of management. In other words, the action that maximizes the objective will be be either 100% NM, 100% HF, 20% ET and 80% NM or 20% ET and 80% HF (or the equivalent proportions when the constraint on ET is different; Figure 1.).
 
 Predicting the outcome of management under uncertainty
 ------------------------------------------------------
 
-The system model we used to make predictions of BIFAW management decision outcomes were multivariate adaptive regression splines (MARS) [@Friedman1991], a regression modelling technique, fit to the output data from the state and transition models of @Czembor2011. We chose to represent the state and transitions using MARS rather than run further state and transition models as the latter would be computationally infeasible given the large number repeated model runs needed for the analyses.
+The system model we used to make predictions of BIFAW management decision outcomes were multivariate adaptive regression splines (MARS) [@Friedman1991], a regression modelling technique, fit to the output data from the state and transition models of @Czembor2011. We chose to represent the state and transitions using MARS rather than run further state and transition models as the latter would be computationally infeasible given the large number of repeated model runs needed for the analyses.
 
 The state and transition models predicted the proportion of the modeled BIFAW landscape in four vegetation states after 150 years. The four states in the models were high-density regrowth (HDRG), low-density regrowth (LDRG), high-density mature woodland (HDMW), and low-density mature woodland (MLDW). The transition probabilities among these states for each of the three management actions were parameterized by five experts [@Czembor2009]. Transition probabilities were elicited for a set of causal agents. The set of transition probabilities was different for each of the three management scenario [see Table 1 in @Czembor2009]. Combining transition types, management scenarios, and causal agents, there were 169 different transition probability parameters elicited from each of the five experts. There were other parameter types included in the state and transition models, but for simplicity we focus solely on the transition probabilities.
 
-The expert elicitation resulted in 375 separate estimates of each transition probability. And it is the distribution of these 375 estimates that constitutes the initial uncertainty of the decision model in this case study. These estimates can be thought of as 375 alternative scenarios for the trajectory of the BIFAW over the next 150 years. This is much like a climate modelling may produce multiple alternative trajectories of the climate into the future under different warming scenarios.
+The expert elicitation resulted in 375 separate estimates of each transition probability. And it is the distribution of these 375 estimates that constitutes the initial uncertainty of the decision model in this case study. These estimates can be thought of as 375 alternative scenarios for the trajectory of the BIFAW over the next 150 years. This is much like how a climate model may produce multiple alternative trajectories of the climate into the future under different warming scenarios.
 
-@Czembor2011 used the 375 as alternative parameterizations to simulate BIFAW forest dynamics with the state and transition modelling software package, Vegetation Dynamics Development Tool (VDDT) [@ESSA2007] running the model ten times for each scenario. Here, we took the output from their simulations and fit MARS models for each management action
+@Czembor2011 used the 375 estimate sets as alternative parameterizations to simulate BIFAW forest dynamics with the state and transition modelling software package, Vegetation Dynamics Development Tool (VDDT) [@ESSA2007] running the model ten times for each scenario. Here, we took the output from their simulations and fit MARS models for each management action
 separately. For each of the MARS models the response ($n=375\times10=3750$) was the proportion of the model landscape in the two mature woodland states combined. The predictors were the model parameters (including but not limited to the transition probabilities).
 
-All analyses were done using the statistical computing language R version 3.2.4 [@R2015] with the MARS models fit using the software package 'earth' version 4.4.4 [@Milborrow2013].
+All analyses were done using the statistical computing language R version 3.2.3 [@R2015] with the MARS models fit using the software package 'earth' version 4.4.4 [@Milborrow2013].
 
 Calculating EVI
 ---------------
 
 ### EVPI
-To calculate we applied equation 1, 2, and 3 to the outcomes of BIFAW management predicted by MARS models for each of the 375 alternative expert-derived parameterizations (which is same as the original simulated output of @Czembor2011 averaged over the 100 model runs). These data can be transformed into a 4 by 375 matrix where cells hold the predicted proportion of the landscape in a mature state, with the rows representing alternative input parameter sets and columns representing the potentially optimal solutions as in Figure 1. This matrix can then be used to both calculate EVWOI and EVWPI and by extension EVPI.
+To calculate EVPI we applied equations 1, 2, and 3 to the outcomes of BIFAW management predicted by MARS models for each of the 375 alternative expert-derived parameterizations (which is same as the original simulated output of @Czembor2011 averaged over the 100 model runs). These data can be transformed into a 375 by 4 matrix where cells hold the predicted proportion of the landscape in a mature state, with the rows representing alternative input parameter sets and columns representing the potentially optimal solutions as in Figure 1. This matrix can then be used to both calculate EVWOI and EVWPI and by extension EVPI.
 
 To calculate the EVWOI we first average across the rows (down the columns) to ascertain the expected value of each potentially optimal solution. Then choose the solution with the maximum value and this will be the EVWOI. Calculating EVWPI requires the opposite approach. First we work with each row individually and choose the column that maximizes the value as if we new with certainty that the particular parameter set associated with a given row was correct. After we have maximized the value of each of the 375 alternative scenarios only then do we take the average of these which will be the EVWPI. Again the EVPI is simply the difference between these values.
 
 ### EVPXI
-EVPXI requires a slightly more complicated algorithm. The EVWOI in equation 4, which is used to calculate EVPXI can be calculated as above. However, calculating the EVWPXI for the $i^{th}$ parameter(s) requires the algorithm which we outline in pseudo-code in Box 1.
+EVPXI requires a slightly more complicated algorithm. The EVWOI in equation 4, which is used to calculate EVPXI can be calculated as above. However, calculating the EVWPXI for the $i^{th}$ parameter(s) requires the double looping algorithm which we outline in the pseudo-code in Box 1.
 
 ******
 
 #### Box 1: Calculating EVWPXI$_i$
 
-__For each parameter value,__ $p$ from 1 to 375
+To calculate EVPXI for any given parameter or paramters of interest, which we will denote as the $i^{th}$ parameter(s), we apply the following algorithm to the 375 alternative parameterizations of the 169 parameters.
 
-$\quad$ Step 1. Set parameter(s) $i$ to parameter value $p$.
+__For each alternative parameterization,__ $p$ from 1 to 375.
 
-$\quad$ __For each parameter value,__ $p'$ from 1 to 375
+$\quad$ Step 1. Set parameter(s) $i$ to parameter estimate(s) $p_i$.
 
-$\quad$ $\quad$ Step 2. Set parameters $c$ to parameter value $p'$.
+$\quad$ __For each each alternative parameterization,__ $p'$ from 1 to 375.
+
+$\quad$ $\quad$ Step 2. Set parameter(s) $c$ to parameter estimate(s) $p'_c$.
 
 $\quad$ $\quad$ Step 3. Predict the proportion of BIFAW in a mature state with the parameters set in steps 1 and 2.
 
-$\quad$ $\quad$ Step 4. Record the value of each potentially optimal management strategy : $Value$.
+$\quad$ $\quad$ Step 4. Record the values of each potentially optimal management strategy : $Value$.
+
+$\quad$ $\quad$ Repeat steps 2 to 4 above for each alternative parameterization $p'$.
 
 $\quad$ __end loop__
 
-$\quad$ Step 5. Average the result of step 4 across each parameter value $p'$ : $Mean_{s_c}(Value)$.
+$\quad$ Step 5. Average the results of step 4 across each alternative parameterization $p'$ : $Mean_{s_c}(Value)$.
 
-$\quad$ Step 6. Record the maximum expected value from step 5 : $Max_a[Mean_{s_c}(Value)]$.
+$\quad$ Step 6. Record the maximum average value from step 5 : $Max_a[Mean_{s_c}(Value)]$.
 
+$\quad$ Repeat all steps above for each alternative parameterization $p$.
 __end loop__
 
-Average the result of step 6 across each parameter value $p$ : $Mean_{s_i}\{Max_a[Mean_{s_c}(Value)]\}$.
+Average the result of step 6 across each alternative parameterization $p_j$ : $Mean_{s_i}\{Max_a[Mean_{s_c}(Value)]\}$.
 
 ******
 
 Using the algorithm above we calculated the EVPXI for all 169 transition probabilities. Using the same algorithm we then calculated the EVPXI for pairs of parameters simultaneously. First we took the top two most valuable transition probabilities that transition away from each of the four woodland states and calculated their simultaneous EVPXI. Then we did the same for the top pair of of parameters for each management strategy. With these results we can see which state or management strategy it would be most beneficial to focus on for learning.
 
-Finally we recalculated the EVPI and EVPXI for all transition probabilities this time varying the constraint on the amount of ET management allowable. This has the effect of changing the size of the feasible management region and changing in the position of the two left-most vertices in Figure 1. We recalculated EVI for a maximum allowable rate of thinning from 10 to 100% in increments of 10%.
+Finally we recalculated the EVPI and EVPXI for all transition probabilities, this time varying the constraint on the amount of ET management allowable. This has the effect of changing the size of the feasible management region and changing in the position of the two left-most vertices in Figure 1. We recalculated EVI for a maximum allowable amount of thinning from 10 to 100% in increments of 10%.
