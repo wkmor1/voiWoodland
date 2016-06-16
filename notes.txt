@@ -1,0 +1,3 @@
+The solutions must be at the vertices since each action is independent of one another and for any given set of parameters their is only one action that is best.
+
+Parameterise like all words is made up. It happened to be made up over 80 years ago.
