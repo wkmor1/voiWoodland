@@ -6,7 +6,6 @@ output:
   pdf_document:
     fig_caption: yes
     citation_package: natbib
-    keep_tex: true
 header-includes:
 - \linespread{2}\selectfont
 - \usepackage{setspace}

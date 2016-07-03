@@ -12,7 +12,7 @@
 #'        parameter sets must be supplied where the list elements are named
 #'        vectors of parameter where the names correspond to the action the
 #'        parameter of interest associated with.
-#' 
+#'
 #' @importFrom dplyr arrange distinct select_
 #' @importFrom parallel mclapply
 #' @importFrom tidyr spread_
@@ -27,14 +27,14 @@ evoi <-
     type = c("evpi", "evwoi", "evpxi_list", "evpxi"),
     parameter_list = NULL
   ) {
-    
+
     type <- match.arg(type)
     
     with(
       data,
       {
         actions <- unique(action)
-        
+
         data <-
           lapply(
             actions,
@@ -49,14 +49,14 @@ evoi <-
               data[, setdiff(colnames(data), c("action", "run", "sample"))]
             }
           )
-        
+
         models <- lapply(data, fit_earth, "outcome")
         parameters <- lapply(data, select_, paste0("-", "outcome"))
         parameters <- lapply(parameters, distinct)
         outcomes <- mapply(predict, models, parameters)
         n_samples <- length(unique(sample))
         colnames(outcomes) <- names(models) <- names(parameters) <- actions
-        
+
         out <-
           lapply(
             max_eco,
@@ -70,14 +70,11 @@ evoi <-
             type,
             parameter_list
           )
-        
+
         do.call(rbind, out)
       }
     )
   }
-
-
-
 
 o2v <- function(outcomes, max_eco) {
   with(
@@ -102,7 +99,9 @@ calc_vwpxi <-
     colnames(outcomes) <- names(models)
     value <- o2v(outcomes, max_eco)
     mean_value <- colMeans(value)
-    max(mean_value)
+    ans <- max(mean_value)
+    attr(ans, "which.max") <- which.max(mean_value)
+    ans
   }
 
 calc_evwpxi <-
@@ -119,7 +118,7 @@ calc_evwpxi <-
         max_eco
       )
 
-    mean(results)
+    list(evwpxi = mean(results), vwpxi = results)
 
   }
 
@@ -142,7 +141,7 @@ evoi_ <-
     max_eco, outcomes, parameters, models, n_samples, actions,
     ncores, type, parameter_list
   ) {
-    
+
     value <- o2v(outcomes, max_eco)
 
     evwoi <- max(colMeans(value))
@@ -153,6 +152,8 @@ evoi_ <-
       evpi =
         {
           evwpi <- mean(apply(value, 1, max))
+
+          attr(evwpi, "vwpxi") <- apply(value, 1, which.max)
 
           data.frame(
             parameters = "EVPI",
@@ -177,20 +178,28 @@ evoi_ <-
               calc_evwpxi,
               parameter_list,
               lapply(parameter_list, names),
-              MoreArgs = 
+              MoreArgs =
                 list(
                   n_samples  = n_samples,
                   parameters = parameters,
                   models     = models,
                   max_eco    = max_eco
-                )
+                ),
+              SIMPLIFY = FALSE
             )
-          data.frame(
-            parameters = names(parameter_list),
-            max_eco    = max_eco,
-            evi        = unlist(evwpxi) - evwoi,
-            stringsAsFactors = FALSE
-          )
+
+          ans <-
+            data.frame(
+              parameters = names(parameter_list),
+              max_eco    = max_eco,
+              evi        =
+                unlist(lapply(evwpxi, getElement, name = "evwpxi")) - evwoi,
+              stringsAsFactors = FALSE
+            )
+
+          attr(ans, "vwpxi") <- lapply(evwpxi, getElement, name = "vwpxi")
+
+          ans
         },
 
       evpxi = 
@@ -207,21 +216,38 @@ evoi_ <-
               ncores
             )
 
-          data.frame(
-            parameters = unlist(lapply(parameters, names)),
-            max_eco    = max_eco,
-            evi        = unlist(evwpxi) - evwoi,
-            stringsAsFactors = FALSE
-          )
+          ans <-
+            data.frame(
+              parameters = unlist(lapply(parameters, names)),
+              max_eco    = max_eco,
+              evi        = 
+                unlist(
+                  lapply(
+                    evwpxi, 
+                    function(x) lapply(x, getElement, name = "evwpxi")
+                  )
+                ) - evwoi,
+              stringsAsFactors = FALSE
+            )
+
+          attr(ans, "vwpxi") <-
+            lapply(
+              evwpxi,
+              function(x) lapply(x, getElement, name = "vwpxi")
+            )
+
+          ans
+
         }
     )
   }
 
 fit_earth <-
-  function(x, outcome) {
+  function(x, outcome, ...) {
     earth(
       x      = x[, setdiff(colnames(x), outcome)],
       y      = x[, outcome],
-      degree = 5
+      degree = 5,
+      ...
     )
   }

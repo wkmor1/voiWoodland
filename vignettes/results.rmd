@@ -1,6 +1,8 @@
 Results
 =======
 
+MARS approximation of the state transition model
+
 EVWOI
 -----
 
