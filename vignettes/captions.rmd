@@ -11,6 +11,7 @@ param_plot_caption <-
 ```{r results_plot1_caption}
 results_plot1_caption <-
   "The expected value of partial perfect information for the top four transition probabilities on their own (top panel), the top two transition probabilities out of each state (middle panel) and the top two transition probabilities for each management option (bottom panel) compared with the expected value of perfect information (EVPI)."
+# Need to rewrite this caption with more details
 ```
 
 ```{r results_plot2_caption}

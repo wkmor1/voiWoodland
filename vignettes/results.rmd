@@ -2,7 +2,11 @@ Results
 =======
 
 MARS approximation of the state transition model
+------------------------------------------------
 
+<!--- 
+Need to include some statistics (cv cor?) on the MARs models here.
+--->
 EVWOI
 -----
 
@@ -11,7 +15,10 @@ With the original information elicited from the five experts, the optimal decisi
 EVPI
 -----
 
-If the managers of the BIFAW had perfect knowledge and could at most, thin an amount of 20%, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha). This means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure 2).
+If the managers of the BIFAW had perfect knowledge and could at most, thin 20% of the forests and Woodland, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha). This means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure 2). <!--- This value represents the upper limit blah blah 
+
+Here I need to track the proportion of the time each potentially optimal solution is the winner and present that.
+--->
 
 EVPXI
 -----
@@ -21,4 +28,6 @@ EVI when constraint on management changes
 -----------------------------------------
 
 Figure 3 shows the effect of changing the allowable amount of thinning of the BIFAW from 10 to 100% on EVPI and the most valuable parameter (according to the EVPXI analysis above) for each management action. Note that while both increase linearly as the constraint is lifted those parameters unrelated to the ET remain the same despite the change in the feasible region.
-
+<!---
+Need to expand on this explanation
+--->
