@@ -10,11 +10,10 @@ param_plot_caption <-
 
 ```{r results_plot1_caption}
 results_plot1_caption <-
-  "The expected value of partial perfect information for the top four transition probabilities on their own (top panel), the top two transition probabilities out of each state (middle panel) and the top two transition probabilities for each management option (bottom panel) compared with the expected value of perfect information (EVPI)."
-# Need to rewrite this caption with more details
+  "The expected value of partial perfect information (EVPXI) for the top four transition probabilities on their own (top panel), the top two transition probabilities out of each state (middle panel) and the top two transition probabilities for each management option (bottom panel) compared with the expected value of perfect information (EVPI)."
 ```
 
 ```{r results_plot2_caption}
 results_plot2_caption <-
-  "Response of the expected value information to changing the constraint on the allowable proportion of the BIFAW to undergo ecological thinning. The top grey line is EVPI. The three black lines are the EVPXI information when the partial perfect information is resolved for the top two transistion probabilities associated with each action."
+  "Response of the expected value information to changing the constraint on the allowable proportion of the BIFAW to undergo ecological thinning (ET). The top grey line is EVPI. The three black lines are the EVPXI for the most valuable parameter associated with each action."
 ```

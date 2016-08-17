@@ -15,8 +15,9 @@ With the original information elicited from the five experts, the optimal decisi
 EVPI
 -----
 
-If the managers of the BIFAW had perfect knowledge and could at most, thin 20% of the forests and Woodland, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha). This means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure 2). <!--- This value represents the upper limit blah blah 
+If the managers of the BIFAW had perfect knowledge and could at most, thin 20% of the forests and Woodland, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha). This means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure 2). For managers, this area of mature woodland represents the upper limit on what resources they should be willing to spend on improving their models of BIFAW dynamics. If the resources neccessary were worth more than this amount of mature woodland to themm then it would be irrational to seek to reduce the uncertainty.
 
+<!---
 Here I need to track the proportion of the time each potentially optimal solution is the winner and present that.
 --->
 
@@ -27,7 +28,4 @@ Of the 169 transition probabilities most, but not all, had zero or negligible EV
 EVI when constraint on management changes
 -----------------------------------------
 
-Figure 3 shows the effect of changing the allowable amount of thinning of the BIFAW from 10 to 100% on EVPI and the most valuable parameter (according to the EVPXI analysis above) for each management action. Note that while both increase linearly as the constraint is lifted those parameters unrelated to the ET remain the same despite the change in the feasible region.
-<!---
-Need to expand on this explanation
---->
+Figure 3 shows the effect of changing the allowable amount of thinning of the BIFAW from 10 to 100%, that is, altering the constraint on the ET management option. The figure indicates that EVPI and the EVPXI of the most valuable transition probability parameter (according to the analyses in the preceding section) associated with ET increase linear as the constraint on ET is relaxed. The EVPXI of the parameters associated with other management options, in contrast, are invariant with respect to the constraint.
