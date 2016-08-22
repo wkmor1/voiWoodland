@@ -22,7 +22,9 @@ area <- 250000L
 ini_pc <- .19
 
 bifaw <- with(bifaw, left_join(inputs, outputs))
+```
 
+```{r parameters_df}
 parameters_df <- unique(bifaw$parameter)
 
 parameters_df <-
@@ -34,6 +36,40 @@ parameters_df <-
   do.call(rbind, .) %>%
   data.frame(stringsAsFactors = FALSE) %>%
   setNames(c("parameters", "type", "from", "to", "action", "cause"))
+```
+
+```{r mars_performance}
+model_data <-
+  lapply(
+    unique(bifaw$action),
+    function(x) {
+      data <-
+        spread_(
+          bifaw[bifaw[, "action"] == x, ],
+          "parameter",
+          "parameter_value"
+        )
+      data <- arrange(data, sample, run)
+      data[, setdiff(colnames(data), c("action", "run", "sample"))]
+    }
+  )
+
+cv_rsqrd <-
+  lapply(
+    model_data,
+    function(x, ...) {
+      earth(
+        outcome ~ .,
+        data = x,
+        ...
+      )
+    },
+    ncross = 3,
+    nfold  = 10
+  ) %>%
+  lapply(getElement, "cv.rsq.tab") %>%
+  lapply(function(x) x["mean", "mean"]) %>%
+  setNames(unique(bifaw$action))
 ```
 
 ```{r evwoi}
