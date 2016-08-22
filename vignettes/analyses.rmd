@@ -79,6 +79,8 @@ evwoi  <- evoi(bifaw, type = "evwoi")["evi"]
 ```{r results_plot1_data}
 evpi <- evoi(bifaw)
 
+prop_act <- round(table(attr(evpi$evi, "vwpi")) / 3.75)
+
 evpxi_all <-
   evoi(bifaw, type = "evpxi", ncores = 60) %>%
   left_join(parameters_df) %>%

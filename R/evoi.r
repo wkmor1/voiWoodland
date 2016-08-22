@@ -153,7 +153,7 @@ evoi_ <-
         {
           evwpi <- mean(apply(value, 1, max))
 
-          attr(evwpi, "vwpxi") <- apply(value, 1, which.max)
+          attr(evwpi, "vwpi") <- apply(value, 1, which.max)
 
           data.frame(
             parameters = "EVPI",
