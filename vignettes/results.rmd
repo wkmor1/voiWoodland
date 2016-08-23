@@ -4,9 +4,8 @@ Results
 MARS approximation of the state transition model
 ------------------------------------------------
 
-<!--- 
-Need to include some statistics (cv cor?) on the MARs models here.
---->
+The MARS models had good fit to the STM output data. The average cross-validated (ten-fold) R$^2$ was more than 93% for each of the MARS models.
+
 EVWOI
 -----
 
@@ -15,11 +14,9 @@ With the original information elicited from the five experts, the optimal decisi
 EVPI
 -----
 
-If the managers of the BIFAW had perfect knowledge and could at most, thin 20% of the forests and Woodland, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha). This means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure 2). For managers, this area of mature woodland represents the upper limit on what resources they should be willing to spend on improving their models of BIFAW dynamics. If the resources neccessary were worth more than this amount of mature woodland to themm then it would be irrational to seek to reduce the uncertainty.
+If the managers of the BIFAW had perfect knowledge and could at most, thin 20% of the forests and Woodland, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha). This means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure 2). For managers, this area of mature woodland represents the upper limit on what resources they should be willing to spend on improving their models of BIFAW dynamics. If the resources neccessary were worth more than this amount of mature woodland to themm then it would be irrational to seek to reduce the uncertainty. 
 
-<!---
-Here I need to track the proportion of the time each potentially optimal solution is the winner and present that.
---->
+In calculating EVPI the 100% NM solution was optimal `r prop_act[1]`% of the time, while the 100% HF solution was only optimal `r prop_act[1]`% of the time. Of the solutions including 20% ET the solution including 80% NM optimal and the solution including 80% HF were optimal`r prop_act[3]`% and `r prop_act[4]`% of the time respectively.
 
 EVPXI
 -----

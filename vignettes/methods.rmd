@@ -21,7 +21,7 @@ The expert elicitation resulted in 375 separate estimates of each transition pro
 
 @Czembor2011 used the 375 estimate sets as alternative parameterizations to simulate BIFAW forest dynamics with the state and transition modelling software package, Vegetation Dynamics Development Tool (VDDT) [@ESSA2007] running the model ten times for each scenario. Here, we took the output from their simulations and fit MARS models for each management action separately. Again, it was only possible approximate the STM models with a fast regression method as the models of each action were fitted independently and therefore where linear with respect to the application of the actions. Had the extra complexity of the additional layer of dynamism been included then using MARS to approximate the STM models may not have been appropriate. For each of the MARS models the response ($n=375\times10=3750$) was the proportion of the model landscape in the two mature woodland states combined. The predictors were the model parameters (including but not limited to the transition probabilities).
 
-All analyses were done using the statistical computing language R version 3.2.3 [@R2015] with the MARS models fit using the software package 'earth' version 4.4.4 [@Milborrow2013].
+All analyses were done using the statistical computing language R version 3.2.3 [@R2015] with the MARS models fit (see R code provided in supplement for the specific model parameters used) using the software package 'earth' version 4.4.4 [@Milborrow2013].
 
 Calculating the Value of Information
 ------------------------------------
@@ -33,7 +33,7 @@ To calculate EVPI we applied equations 1, 2, and 3 to the outcomes of BIFAW mana
 To calculate the EVWOI we first average across the rows (down the columns) to ascertain the expected value of each potentially optimal solution. Then choose the solution with the maximum value and this will be the EVWOI. Calculating EVWPI requires the opposite approach. First we work with each row individually and choose the column that maximizes the value as if we new with certainty that the particular parameter set associated with a given row was correct. After we have maximized the value of each of the 375 alternative scenarios only then do we take the average of these, which will be the EVWPI. Again the EVPI is simply the difference between these values.
 
 ### EVPXI
-EVPXI requires a slightly more complicated algorithm. The EVWOI in equation 4, which is used to calculate EVPXI can be calculated as above. However, calculating the EVWPXI for the $i^\mathrm{{th}$ parameter(s) requires the double looping algorithm which we outline in the pseudo-code in Box 1.
+EVPXI requires a slightly more complicated algorithm. The EVWOI in equation 4, which is used to calculate EVPXI can be calculated as above. However, calculating the EVWPXI for the $i^\mathrm{th}$ parameter(s) requires the double looping algorithm which we outline in the pseudo-code in Box 1.
 
 ******
 
