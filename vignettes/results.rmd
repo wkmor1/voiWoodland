@@ -4,7 +4,7 @@ Results
 MARS approximation of the state transition model
 ------------------------------------------------
 
-The MARS models had good fit to the STM output data. The average cross-validated (ten-fold) R$^2$ was more than 93% for each of the MARS models.
+The MARS models had good fit to the STM output data. The average cross-validated (ten-fold) R$^2$ was at least 93% for each of the three MARS models.
 
 EVWOI
 -----
@@ -14,13 +14,13 @@ With the original information elicited from the five experts, the optimal decisi
 EVPI
 -----
 
-If the managers of the BIFAW had perfect knowledge and could at most, thin 20% of the forests and Woodland, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha). This means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure 2). For managers, this area of mature woodland represents the upper limit on what resources they should be willing to spend on improving their models of BIFAW dynamics. If the resources neccessary were worth more than this amount of mature woodland to themm then it would be irrational to seek to reduce the uncertainty. 
+If the managers of the BIFAW had perfect knowledge and could at most, thin 20% of landscape, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha). This means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure 2). For managers, this area of mature woodland represents the upper limit on what resources they should be willing to spend on improving their models of BIFAW dynamics. If the resources necessary were worth more than this amount of mature woodland to them then it would be irrational to seek to reduce the uncertainty. 
 
-In calculating EVPI the 100% NM solution was optimal `r prop_act[1]`% of the time, while the 100% HF solution was only optimal `r prop_act[1]`% of the time. Of the solutions including 20% ET the solution including 80% NM optimal and the solution including 80% HF were optimal`r prop_act[3]`% and `r prop_act[4]`% of the time respectively.
+In calculating EVPI the 100% NM solution was optimal `r prop_act[1]`% of the time, while the 100% HF solution was only optimal `r prop_act[2]`% of the time. Of the solutions including 20% ET, the solution including 80% NM and the solution including 80% HF, were optimal `r prop_act[3]`% and `r prop_act[4]`% respectively.
 
 EVPXI
 -----
-Of the 169 transition probabilities most, but not all, had zero or negligible EVPXI (i.e., EVWXI$_i$ $\approx$ EVWOI). Figure 2 (top panel) shows the top four most valuable parameters, while remaining parameters had EVPI $<$%1. Notably, one parameter (the probability of woodland transitioning from a low-density to a high density regrowth state, due to coppicing of tree stems, when the BIFAW is left unmanaged) was `r round(evpxi_all[1, "evi"] * 100)`%. To managers, this means if they could completely resolve the uncertainty in this parameter alone they would expect to manage the BIFAW so much more optimally that on average they would see `r fmt(evpxi_all[1, "evi"] * area)` ha more mature woodland in 150 years than if they managed the forest under their initial level of uncertainty.
+Of the 169 transition probabilities, most but not all, had zero or negligible EVPXI (i.e., EVWXI$_i$ $\approx$ EVWOI). Figure 2 (top panel) shows the top four most valuable parameters, while remaining parameters had EVPI $<$%1. Notably, one parameter (the probability of woodland transitioning from a low-density to a high density regrowth state, due to coppicing of tree stems, when the BIFAW is left unmanaged) was `r round(evpxi_all[1, "evi"] * 100)`%. To managers, this means if they could completely resolve the uncertainty in this parameter alone, they would expect to manage the BIFAW so much more optimally that on average, they would see `r fmt(evpxi_all[1, "evi"] * area)` ha more mature woodland in 150 years than if they managed the forest under their initial level of uncertainty.
 
 EVI when constraint on management changes
 -----------------------------------------
