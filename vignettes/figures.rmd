@@ -1,5 +1,5 @@
 
-```{r management_plot, fig.cap = management_plot_caption}
+```{r management_plot, fig.cap = management_plot_caption, dpi = 300}
 ggtern(
   data =
     data_frame(
@@ -32,7 +32,7 @@ theme(
 )
 ```
 
-```{r param_plot, fig.cap = param_plot_caption}
+```{r param_plot, fig.cap = param_plot_caption, dpi = 300}
 filter(bifaw, parameter == "ProbabilityHDRGtoLDRGgivenETthenWindthrow") %>%
 select(-run, -outcome) %>%
 distinct %>%
@@ -43,7 +43,7 @@ ylab("Number of samples") +
 xlab("Probability")
 ```
 
-```{r results_plot1, fig.cap = results_plot1_caption}
+```{r results_plot1, fig.cap = results_plot1_caption, dpi = 300}
 ggplot(evi) +
 aes(parameters, evi, width = width, fill = evpi) +
 geom_bar(stat = "identity") +
@@ -58,7 +58,7 @@ facet_wrap(~type, ncol = 1, scales = "free") +
 theme_bw()
 ```
 
-```{r results_plot2, fig.cap = results_plot2_caption}
+```{r results_plot2, fig.cap = results_plot2_caption, dpi = 300}
 ggplot() +
 aes(x = max_eco, y = evi) +
 geom_line(
@@ -82,6 +82,6 @@ scale_x_continuous(
 ) +
 scale_y_continuous("Expected Value of Information", labels = scales::percent) +
 theme_bw() +
-theme(legend.justification = c(0, 1), legend.position = c(0, 1))
+theme(legend.justification = c(0, 1), legend.position = c(0.01, .99))
 ```
 

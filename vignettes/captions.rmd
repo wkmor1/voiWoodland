@@ -5,7 +5,7 @@ management_plot_caption <-
 
 ```{r param_plot_caption}
 param_plot_caption <-
-  "Frequency histogram of a state and transition model parameter. Histogram shows expert elicted estimates of the probability of a section of the BIFAW transitioning from HDRG to LDRG due to Windthrow if the ecological management option is used."
+  "Frequency histogram of a state and transition model parameter. Histogram shows expert elicted estimates of the probability of a section of the BIFAW transitioning from HDRG to LDRG due to windthrow if the ecological management option is used."
 ```
 
 ```{r results_plot1_caption}
