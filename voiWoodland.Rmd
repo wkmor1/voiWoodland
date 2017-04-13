@@ -336,7 +336,7 @@ xlab("Probability")
 
 @Czembor2011 used the 375 estimate sets as alternative parameterizations to simulate BIFAW forest dynamics with the state and transition modelling software package, Vegetation Dynamics Development Tool (VDDT) [@ESSA2007] running the model ten times for each scenario. Here, we took the output from their simulations and fit MARS models for each management action separately. Again, it was only possible to approximate the state and transition models with a fast regression method as the models of each action were fitted independently and therefore where linear with respect to the application of the actions. Had the extra complexity of the additional layer of dynamism been included, then using MARS to approximate the STM models may not have been appropriate. For each of the MARS models the response ($n=375\times10=3750$) was the proportion of the model landscape in the two mature woodland states combined. The predictors were the model parameters (including but not limited to the transition probabilities).
 
-All analyses were done using the statistical computing language R version 3.3.2 [@R2016] with the MARS models fit (see R code provided in supplement for the specific model parameters used) using the software package 'earth' version 4.4.7 [@Milborrow2013].
+All analyses were done using the statistical computing language R version 3.3.3 [@R2017] with the MARS models fit (see R code provided in supplement for the specific model parameters used) using the software package 'earth' version 4.4.7 [@Milborrow2013].
 
 ### Calculating the Value of Information {-}
 
