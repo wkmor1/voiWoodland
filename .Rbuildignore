@@ -1,3 +1,11 @@
 ^\.Rproj\.user$
 ^.*\.Rproj$
-vignettes/voWoodland_*
+^chicago-author-date\.csl$
+^voiWoodland\.Rmd$
+^voiWoodland\.bib$
+^voiWoodland_cache.*
+^voiWoodland_files.*
+^voiWoodland\.pdf$
+^voiWoodland\.log$
+^voiWoodland\.tex$
+
