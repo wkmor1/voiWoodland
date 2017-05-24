@@ -222,10 +222,10 @@ The objective is to maximize the proportion of the BIFAW in either low-density o
 
 \begin{equation}
 \begin{aligned}
-&\textrm{max}_{NM,HF,ET}(MHDW_{t = 150} + MLDW_{t = 150})\\
-&\textrm{subject to}\\
-&ET < 0.2\\
-&NM + HF + ET < 1 
+&\textrm{max}_\textrm{NM,HF,ET}(\textrm{MHDW}_{t = 150} + \textrm{MLDW}_{t = 150})\\
+\textit{subject to}&\\
+&\textrm{ET} < 0.2\\
+&\textrm{NM} + \textrm{HF} + \textrm{ET} < 1 
 \end{aligned}
 (\#eq:obj)
 \end{equation}
