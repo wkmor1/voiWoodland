@@ -1,3 +1,7 @@
 ## Acknowledgments {-}
 
 We acknowledge Christina Czembor for conducting the initial research upon which these analyses are based. We also thank Patrick Piggot and Parks Victoria for their assistance. This work was supported by the Australian Research Council through the Centre of Excellence in Environmental Decisions and Linkage Project LP110100321; and the Victorian Department of Sustainability and Environment. We thank four anonymous reviewers for there helpful comments on earlier versions of this work. Any use of trade, product, or firm names is for descriptive purposes only and does not imply endorsement by the U.S. Government.
+
+## Supporting Information {-}
+
+Additional supporting information, data and computer code may be found online at: https://github.com/wkmor1/voiWoodland
