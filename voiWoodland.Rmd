@@ -333,7 +333,7 @@ The STMs predicted the proportion of the modelled BIFAW landscape in four vegeta
 
 The expert elicitation resulted in 375 separate estimates of each transition probability. Where for each of the 5 experts there were 75 separate estimates of each of the parameters that together represented the within expert uncertainty in transition probabilities. The distribution of the 375 estimates constitutes the initial uncertainty of the decision model in this case study as each of the 375 estimates is equally likely (see figure \@ref(fig:paramplot)) for an example of the distribution of uncertainty for a single parameter). These estimates can be thought of as 375 alternative scenarios for the trajectory of the BIFAW over the next 150 years (much like how a climate model may produce multiple alternative trajectories of the climate into the future under different warming scenarios). Here the parameter estimates are somewhat correlated, but only between experts as there is no correlation in the parameter estimates (75 for each expert) of individual experts.
 
-(ref:paramplot) Frequency histogram of a STM parameter. Histogram shows expert elicited estimates of the probability of a section of the BIFAW transitioning from HDRG to LDRG due to windthrow if the ecological management option is used.
+(ref:paramplot) Frequency histogram of a STM parameter. Histogram shows expert elicited estimates of the probability of a section of the BIFAW transitioning from HDRG to LDRG, due to windthrow, if the ecological thinning management option is used.
 
 ```{r paramplot, fig.cap = '(ref:paramplot)'}
 filter(bifaw, parameter == "ProbabilityHDRGtoLDRGgivenETthenWindthrow") %>%
@@ -441,7 +441,7 @@ Of the 169 transition probabilities, most but not all, had zero or negligible EV
 
 Changing the allowable amount of thinning of the BIFAW from 10 to 100%, that is, altering the constraint on the ET management option, changes the EVPI and the EVPXI for some parameters (Figure \@ref(fig:resultsplot2)). The EVPI and the EVPXI of the most valuable transition probability parameter (according to the analyses in the preceding section) associated with ET increased linearly as the constraint on ET was relaxed. The EVPI increased from 6 to 9% while under a regime of ecological thinning the increase in EVPXI of the probability of transitioning from MLDW to HDRG due to fuel reduction burning was more modest, going from 0 to 0.1%. The EVPXI of the parameters associated with other management options, in contrast, are invariant with respect to the constraint on the amount of ET.
 
-(ref:resultsplot2) Response of the expected value information to changing the constraint on the allowable proportion of the BIFAW to undergo ecological thinning (ET). The top grey line is EVPI. The three black lines are the EVPXI for the most valuable parameter associated with each action.
+(ref:resultsplot2) Response of the EVI to changing the constraint on the allowable proportion of the BIFAW to undergo ecological thinning (ET). The top grey line is EVPI. The three black lines are the EVPXI for the most valuable parameter associated with each action.
 
 ```{r resultsplot2, fig.cap = '(ref:resultsplot2)'}
 ggplot() +
@@ -486,7 +486,7 @@ However, such an approach can be computationally expensive with models such as S
 
 The analyses we performed required us to make assumptions regarding the monitoring to update the parameters in the model. For monitoring to take place in the manner described, vegetation states must be able to easily be determined in the field. In addition they must be identifiable to a degree of accuracy that they can be distinguished from one another, so that a transition between states is evident and recordable after revisits occurring in a short space of time. States must not only themselves be identifiable, but the surveyor must also be able to tell that a unit of vegetation has been in a state for the required period of time, for a specific transition to occur, and that any transition that does occur has occurred due to a specific causal agent. For some transition probabilities this set of assumptions seems plausible. For instance, the transition from low to high-density regrowth due to coppicing may be simple to identify and record, whereas recognizing that a unit of vegetation remained as low-density regrowth because of combination of drought and mistletoe may be far more difficult. This problem arises because state-transition models are only supposed to represent vegetation dynamics on average and do not necessarily reflect directly observable phenomenon.
 
-### Conclusions {-}
+### Conclusion {-}
 
 In summary, value of information analyses could be performed to inform monitoring and even decide whether it should take place at all. We have shown that a value of information analysis can be used to identify which parts of a complex model system are most valuable to address. Given the assumptions we have outlined above and noting that our conclusions are specific to the case we present here, managers could focus scarce monitoring resources first on the harvest management option and the low-density regrowth states. Here we have demonstrated how to overcome the challenges of implementing a VOI analysis for a complex, continuous model.
 
