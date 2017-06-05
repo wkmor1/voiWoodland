@@ -1,6 +1,6 @@
 ---
 title: "The value of information for woodland management: updating a state and transition model"
-author: "William K. Morris$^1$, Michael C. Runge$^2$ & Peter A. Vesk$^2$"
+author: "William K. Morris$^1$, Michael C. Runge$^2$ & Peter A. Vesk$^1$"
 output:
   bookdown::pdf_document2:
     fig_width: 7.4
