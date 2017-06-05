@@ -4,4 +4,4 @@ We acknowledge Christina Czembor for conducting the initial research upon which 
 
 ## Supporting Information {-}
 
-Additional supporting information, data and computer code may be found online at: https://github.com/wkmor1/voiWoodland
+Additional supporting information, data and computer code may be found online at \texttt{ https://github.com/wkmor1/voiWoodland}
