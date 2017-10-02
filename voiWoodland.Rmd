@@ -1,6 +1,7 @@
 ---
 title: "The value of information for woodland management: updating a state and transition model"
-author: "William K. Morris$^1$, Michael C. Runge$^2$ & Peter A. Vesk$^1$"
+author: "William K. Morris$^{\\dagger,1}$, Michael C. Runge$^2$ & Peter A. Vesk$^1$"
+classoption: draft
 output:
   bookdown::pdf_document2:
     fig_width: 7.4
@@ -12,6 +13,7 @@ output:
       before_body: abstract.tex
 header-includes:
 - \usepackage{titlesec}
+- \setcitestyle{aysep={}} 
 - \titleformat{\paragraph}{\small\normalfont\bfseries}{}{0pt}{}
 - \titleformat{\subparagraph}{\small\normalfont}{}{0pt}{}
 - \linespread{2}\selectfont
@@ -22,16 +24,19 @@ header-includes:
 - \usepackage{pdflscape}
 - \captionsetup{font={stretch=2}}
 - \usepackage{pbox}
-- \usepackage[displaymath,mathlines]{lineno}
-- \linenumbers
+- \usepackage[nomarkers]{endfloat}
+- \renewcommand{\listoffigures}{}
+- \renewcommand\bibname{Literature Cited}
+#- \usepackage[displaymath,mathlines]{lineno}
+#- \linenumbers
 subparagraph: true
-biblio-style: voiWoodland.bst
+biblio-style: ea.bst
 bibliography: voiWoodland.bib
 ---
 
 ```{r setup, echo = FALSE}
 knitr::opts_chunk$set(
-  cache = TRUE, echo = FALSE, message = FALSE, warning = FALSE, results = "hide"
+  cache = TRUE, echo = FALSE, message = FALSE, warning = FALSE, results = "hide", base.dir = ""
 )
 ```
 
@@ -182,13 +187,13 @@ top_params <-
 evpxi_df <- filter(evpxi_df, parameters %in% top_params)
 ```
 
-## Introduction {-}
+# Introduction {-}
 
 Ecosystems are typically managed under uncertainty. Reducing uncertainty (through monitoring, experiments, or other research) can facilitate management decisions with greater expected benefits. On the other hand, sometimes reducing uncertainty is not justified [@Mcdonaldmadden2010]. The decision to gather new information is only rational if the expected benefit when making a decision with new information outweighs the cost of learning. Determining the value of information facilitates calculating this benefit [@Raiffa1961].
 
 Value of information (VOI) theory is a set of decision theoretic tools that have previously been applied to decision problems in economics, medicine, engineering and other domains [@Dakins1999; @Yokota2004a; @Claxton2008; @Wu2013; @Keisler2014]. With the VOI toolset, a decision analyst can assess what to monitor, how much to monitor and even whether monitoring is justified at all.
 
-Compared with other fields, such as operations research and medicine, ecology and natural resource management have been slower to adopt VOI analyses for decision making, although recently, some examples have appeared in the literature [e.g., @Polasky2001; @Moore2011; @Runge2011a; @Runting2013]. Most examples have focused on evaluating VOI for models with discrete expressions of model uncertainty [e.g., @Moore2012]. Furthermore, ecological decision problem solvers have tended to focus on models of population dynamics [@Runge2011a; @Canessa2015; @Johnson2014a; @Maxwell2015] rather than community and/or ecosystem-level models. This is an important gap in our understanding, as much effort and resources are expended on ecosystem management. @Kangas2010 noted the potential for VOI to help foresters target data acquisition. More recently, @Roessiger2016 have shown that using more optimally informed models of forest stand dynamics improves the outcomes of management.
+Compared with other fields, such as operations research and medicine, ecology and natural resource management have been slower to adopt VOI analyses for decision making, although recently, some examples have appeared in the literature [e.g., @Polasky2001; @Moore2011; @Runge2011a; @Runting2013]. Most examples have focused on evaluating VOI for models with discrete expressions of model uncertainty [e.g., @Moore2012]. Furthermore, ecological decision problem solvers have tended to focus on models of population dynamics [@Runge2011a; @Johnson2014a; @Canessa2015; @Maxwell2015] rather than community and/or ecosystem-level models. This is an important gap in our understanding, as much effort and resources are expended on ecosystem management. @Kangas2010 noted the potential for VOI to help foresters target data acquisition. More recently, @Roessiger2016 have shown that using more optimally informed models of forest stand dynamics improves the outcomes of management.
 
 One reason why communities and ecosystems have rarely been the focus of VOI analyses is that community or ecosystem models make VOI analysis difficult to perform. Ecosystem models, such as state and transition models (STM), exhibit complex nonlinear dynamics, have many parameters (multidimensional), and their uncertainties are often continuous, rather than discrete, making it difficult to calculate the VOI analytically. By continuous and discrete uncertainty, we mean to distinguish between continuous uncertainty that takes on infinite values (such as the uncertainty described by a normal density function) and discrete uncertainty that ascribes probabilities to some finite set of values.   
 
@@ -196,25 +201,25 @@ An approach to dealing with multidimensional continuous uncertainty and avoid ha
 
 In the work that follows we briefly introduce our motivating example of Box Ironbark Forest and Woodland (BIFAW) management and revisit the state transition models of this system built by @Czembor2009. We then provide the reader with some introductory material on VOI analyses and its variants, before applying these techniques to our case study and demonstrate how some of the inherent complexities can be addressed by discretising the uncertainty and applying stepwise algorithms that negate the need for complex integral calculus. The overarching aim of this work is to demonstrate how to apply and interpret a VOI analysis for a complex ecosystem model with many parameters. While the methods we use could be applied to a broad range of ecological decision problems, the results we see are sensitive to the specific objectives, model and initial state of uncertainty we confront below. 
 
-### Box Ironbark Forest and Woodland management {-}
+## Box Ironbark Forest and Woodland management {-}
 
 The BIFAW region covers approximately 250,000 ha of central Victoria, Australia. The BIFAW are plant communities that occur on low-fertility soils and in a semi-arid to temperate climate. Much of the pre-19th century stands of BIFAW were cleared for agriculture and gold mining. Most of the current extent is highly fragmented regrowth. These regrowth stands are typically missing key ecosystem components such as large, hollow-bearing trees and a diverse understory shrub layer. Tree species found in BIFAW include Grey Box (*Eucalyptus microcarpa*), Red Box (*E. polyanthemos*), Long Leaf Box (*E. goniocalyx*), Yellow Box (*E. melliodora*), Red Ironbark (*E. tricarpa*), Red Stringybark (*E. macrorhyncha*) and Yellow Gum (*E. leucoxylon*). The BIFAW supports important habitat for three Victorian-listed threatened taxa: Brush-tailed Phascogale (*Phascogale tapoatafa*), Powerful Owl (*Ninox strenua*) and Regent Honeyeater (*Xanthomyza phrygia*) [@Tzaros2005]. The latter is also a federally listed endangered species. Regent Honeyeaters are threatened because they rely on large trees for foraging and nesting [@Menkhorst1999].
 
 In 1996 the state government of Victoria commissioned an investigation into an appropriate system for the protection and management of BIFAW. As a direct result, over 200,000 ha of BIFAW were gazetted as national park and other protected areas. The report recommended a program of ecological thinning be undertaken as part of an ecological management strategy to assist the development of a forest structure ultimately dominated by large diameter trees in the new parks and reserves [@ECC2001; @Pigott2009]. Ecological thinning is the active reduction of stem density by removing select trees from the stand. Stands are thinned to a density that approximates the density of an older stand. The reduction in density aims to improve forest health as the remaining trees have greater resource availability and faster growth rates are presumed. In addition, some of the fallen timber resulting from the thinning is retained to improve habitat for plants and animals [@Cunningham2009; @Horner2010]. In 2003 the body in charge of BIFAW park management, Parks Victoria, established an ecological thinning trial. The aim of the trial was to investigate whether ecological thinning could be used to restore structural diversity of habitat types and the functioning and persistence of key communities and species populations [@Pigott2010]. Short-term observations imply that a diverse shrubby understory is enhanced under a program of ecological thinning [@Jones2015].
 
-#### State and transition models of Box Ironbark Forest and Woodland {-}
+### State and transition models of Box Ironbark Forest and Woodland {-}
 
 @Czembor2009 built a suite of simulation models of BIFAW dynamics with parameters estimated through expert elicitation using methods adapted from @Morgan1990. Their BIFAW state and transition models predict the proportions of a model landscape in four states: high-density regrowth (HDRG), low-density regrowth (LDRG), and the two states most desired by land-managers, mature high-density woodland (MHDW), and mature low-density woodland (MLDW). The models included three management options, no management/natural disturbance only (NM), limited harvest/firewood removal (HF), and ecological thinning (ET). Briefly, the models predict the state of the landscape through time by applying a transition matrix that differs according to the management action applied [see methods, @Czembor2009; @Czembor2011 for more information]. The simulation models the dynamics of 1000 1ha spatially implicit cells.
 
 We make the simplifying assumption that the dynamics of the system are linear with respect to the actions taken. That is, they lack interactions that make the outcome of one action depend on the application of any other action. In effect, there were separate models for each of the actions, one model that predicted the dynamics (changes in state through time) of the BIFAW when NM was applied, one model for HF and one for ET. While a more complex model that included the extra layer of dynamism and included non-linear relationships between combinations of actions and outcome may have produced more realistic results, the simplification was necessary to facilitate the expert elicitation used to parameterise the models.
 
-#### Uncertainty in Box Ironbark Forest and Woodland models {-}
+### Uncertainty in Box Ironbark Forest and Woodland models {-}
 
 Analyzing the variation among models which included three components of uncertainty, @Czembor2011 found that between-expert uncertainty was the greatest contributor to total model uncertainty, followed by imperfect individual expert knowledge, then system stochasticity. In the case presented here we treated the opinions of the experts as the initial state of uncertainty---the original information.
 
 Uncertainty in STM parameters can be represented by a continuous multidimensional (where the dimensions are the different model parameters) probability distribution. However, the elicitation process used by Czembor et al, yields an approximation of such a distribution in the form of multiple discrete estimates of each parameter (in this case, 375 estimates per parameter) that represents the underlying continuous expression of uncertainty. With the discrete estimates of the parameter values we can summarise the continuous parameter space, in much the same way as a histogram of samples represents some underlying probability distribution.
 
-### Decision problem {-}
+## Decision problem {-}
 
 The fundamental objective of the BIFAW region managers is to ensure the persistence of key, functioning communities and species populations of the region. Managers have determined that the means of achieving these objectives is to maximize the proportion of the landscape in a mature woodland (either high, MHDW, or low-density, MLDW) state which supports key habitat components such as hollow bearing trees and a diverse shrubby understory. They have three management actions available to achieve this objective: no management/allow natural disturbance only (NM), allow limited harvest/firewood removal (HF) and thinning (ET). Importantly for the models of Czembor et al, the actions are applied initially and only once, then the models track the state transitions of the modelled BIFAW units (spatially implicit cells) through time.
 
@@ -232,11 +237,11 @@ The objective is to maximize the proportion of the BIFAW in either low-density o
 
 As the model is spatially implicit it does not account for the spatial arrangement of management action and so the dynamics are only effected by the proportion of cells subject to each management action. To represent the practical limitations on the resources available for management, we placed a constraint that only 20% of the BIFAW can be thinned. However, we also test the effect of applying this constraint by varying the allowable proportion of thinning from 10 to 100%.
 
-The case study, as outlined here, falls in class of problems known as linear optimizations. As such, the solutions to the objective maximization will always lie on one of the vertices of the feasible region of management. In other words, the action that maximizes the objective will be be either 100% NM, 100% HF, 20% ET and 80% NM or 20% ET and 80% HF (or the equivalent proportions when the constraint on ET is different; \@ref(fig:managementplot)). Here it is important to note that if the additional dynamic complexity of between action interaction had been modelled (as discussed above) then this assumption of linearity could not be made and any combination of actions may potentially be optimal.
+The case study, as outlined here, falls in class of problems known as linear optimizations. As such, the solutions to the objective maximization will always lie on one of the vertices of the feasible region of management. In other words, the action that maximizes the objective will be be either 100% NM, 100% HF, 20% ET and 80% NM or 20% ET and 80% HF (or the equivalent proportions when the constraint on ET is different; \@ref(fig:Figure1)). Here it is important to note that if the additional dynamic complexity of between action interaction had been modelled (as discussed above) then this assumption of linearity could not be made and any combination of actions may potentially be optimal.
 
 (ref:managementplot) Ternary diagram highlighting the feasible region of management (maximum allowed thinning of 20%) and the four vertices representing potential optimal solutions to the decision problem.
 
-```{r managementplot, fig.cap = '(ref:managementplot)'}
+```{r Figure1, fig.cap = '(ref:managementplot)', fig.path = ""}
 ggtern(
   data =
     data_frame(
@@ -270,7 +275,7 @@ theme(
 ```
 
 
-### Calculating the value of information {-}
+## Calculating the value of information {-}
 
 A value of information analysis can be used to assess the benefit of reducing epistemic uncertainty before making a decision. A decision analyst cannot know, in advance, what information they will gain if they seek to learn before taking action. The expected value _of_ information (EVI) is the difference between the expected value with _new_ information (EVWNI) and the expected value with _original_ information (EVWOI). The EVI can come in a number forms depending on the form of new information. Regardless of form, all variants of EVI analyses assume decisions are being made optimally. That is, the decision analyst considers value to arise from taking actions that maximize the expected value given the original or new information. To do so, the decision analyst requires a model that can be used to predict the outcomes of possible future decisions. In calculating EVI, the analyst will use such a model to predict decision outcomes using the original or new information as their model inputs.
 
@@ -317,25 +322,25 @@ where,
 
 Here $c$ represents the rest of the parameters in the model with uncertainty, $s$. Partial perfect information requires an additional averaging-over step, where value is averaged over the $c^{th}$ not-of-interest parameters, then maximization occurs, before finally averaging over the initial uncertainty of the parameter(s) of interest takes place.
 
-### Study objectives {-}
+## Study objectives {-}
 
 In the following work we apply the above calculations of EVPI and EVPXI to the BIFAW model to ascertain whether and how the addition of new information may improve the outcome of their management. To find the upper bound on the value of information we calculated the expected value of perfect information (EVPI) for the BIFAW model. We then calculated the the partial value of perfect information (EVPXI) for all transition probabilities to determine which parameters have the greatest value for learning. 
 
 We also analysed a set of sampling strategies that resolved the uncertainty for multiple parameters simultaneously. To do so, we calculated the EVPXI for two parameters at a time. First we calculated two-parameter EVPXI for parameters pertaining to specific system states. Second we did the same for parameters pertaining to each management action (see methods section for further details). Finally we tested the effect of varying a constraint on action to see what happened to the expected value of information when the options available to a manager changed.
 
-## Methods {-}
+# Methods {-}
 
-### Predicting the outcome of management under uncertainty {-}
+## Predicting the outcome of management under uncertainty {-}
 
 The system model we used to make predictions of BIFAW management decision outcomes were multivariate adaptive regression splines (MARS) fit to the output data from the STMs of @Czembor2011. MARS is a non-parametric regression technique extending linear models. A MARS model is a weighted sum of a set of basis functions which include constants and hinge functions. As a result MARS models can incorporate non-linearities and interactions. MARS models are fit with a two-step algorithm starting with a forward pass in which the basis functions are iteratively added to the model. In the second step, the backward pass, the basis functions are pruned using cross-validation thus reducing overfitting  [@Friedman1991]. We chose to represent the state and transitions using MARS rather than run further STMs as the latter would be computationally infeasible given the large number of repeated model runs needed for the analyses.
 
 The STMs predicted the proportion of the modelled BIFAW landscape in four vegetation states after 150 years. Again, the four states in the models were high-density regrowth (HDRG), low-density regrowth (LDRG), high-density mature woodland (HDMW), and low-density mature woodland (MLDW). The transition probabilities among these states for each of the three management actions were parameterized by five experts [@Czembor2009]. Transition probabilities were elicited for a set of causal agents. The set of transition probabilities were different for each of the three management scenario [see Table 1 in @Czembor2009]. Combining transition types, management scenarios, and causal agents, there were 169 different transition probability parameters elicited from each of the five experts. There were other parameter types included in the STMs, but for simplicity we focus solely on the transition probabilities.
 
-The expert elicitation resulted in 375 separate estimates of each transition probability. Where for each of the 5 experts there were 75 separate estimates of each of the parameters that together represented the within expert uncertainty in transition probabilities. The distribution of the 375 estimates constitutes the initial uncertainty of the decision model in this case study as each of the 375 estimates is equally likely (see figure \@ref(fig:paramplot)) for an example of the distribution of uncertainty for a single parameter). These estimates can be thought of as 375 alternative scenarios for the trajectory of the BIFAW over the next 150 years (much like how a climate model may produce multiple alternative trajectories of the climate into the future under different warming scenarios). Here the parameter estimates are somewhat correlated, but only between experts as there is no correlation in the parameter estimates (75 for each expert) of individual experts.
+The expert elicitation resulted in 375 separate estimates of each transition probability. Where for each of the 5 experts there were 75 separate estimates of each of the parameters that together represented the within expert uncertainty in transition probabilities. The distribution of the 375 estimates constitutes the initial uncertainty of the decision model in this case study as each of the 375 estimates is equally likely (see figure \@ref(fig:Figure2)) for an example of the distribution of uncertainty for a single parameter). These estimates can be thought of as 375 alternative scenarios for the trajectory of the BIFAW over the next 150 years (much like how a climate model may produce multiple alternative trajectories of the climate into the future under different warming scenarios). Here the parameter estimates are somewhat correlated, but only between experts as there is no correlation in the parameter estimates (75 for each expert) of individual experts.
 
 (ref:paramplot) Frequency histogram of a STM parameter. Histogram shows expert elicited estimates of the probability of a section of the BIFAW transitioning from HDRG to LDRG, due to windthrow, if the ecological thinning management option is used.
 
-```{r paramplot, fig.cap = '(ref:paramplot)'}
+```{r Figure2, fig.cap = '(ref:paramplot)', fig.path = ""}
 filter(bifaw, parameter == "ProbabilityHDRGtoLDRGgivenETthenWindthrow") %>%
 select(-run, -outcome) %>%
 distinct %>%
@@ -350,21 +355,21 @@ xlab("Probability")
 
 All analyses were done using the statistical computing language R version 3.3.3 [@R2017] with the MARS models fit (see R code provided in online supplement for the specific model parameters used) using the software package 'earth' version 4.4.7 [@Milborrow2013].
 
-### Calculating the Value of Information {-}
+## Calculating the Value of Information {-}
 
-#### EVPI {-}
+### EVPI {-}
 
-To calculate EVPI we applied equations 1, 2, and 3 to the outcomes of BIFAW management predicted by MARS models for each of the 375 alternative expert-derived parameterizations (which is equivalent to the original simulated output of @Czembor2011 averaged over the 10 model runs). These data can be transformed into a 375 by 4 matrix where cells hold the predicted proportion of the landscape in a mature state, with the rows representing alternative input parameter sets and columns representing the potentially optimal solutions as in Figure \@ref(fig:managementplot). This matrix can then be used to both calculate EVWOI and EVWPI and by extension EVPI.
+To calculate EVPI we applied equations 1, 2, and 3 to the outcomes of BIFAW management predicted by MARS models for each of the 375 alternative expert-derived parameterizations (which is equivalent to the original simulated output of @Czembor2011 averaged over the 10 model runs). These data can be transformed into a 375 by 4 matrix where cells hold the predicted proportion of the landscape in a mature state, with the rows representing alternative input parameter sets and columns representing the potentially optimal solutions as in Figure \@ref(fig:Figure1). This matrix can then be used to both calculate EVWOI and EVWPI and by extension EVPI.
 
 To calculate the EVWOI we first average across the rows (down the columns) to ascertain the expected value of each potentially optimal solution. Then choose the solution with the maximum value and this will be the EVWOI. Calculating EVWPI requires the opposite approach. First we work with each row individually and choose the column that maximizes the value as if we knew with certainty that the particular parameter set, associated with a given row, was correct. After we have maximized the value of each of the 375 alternative scenarios, only then do we take the average of these, which will be the EVWPI. Again the EVPI is simply the difference between these values.
 
-#### EVPXI {-}
+### EVPXI {-}
 
 EVPXI requires a slightly more complicated algorithm. The EVWOI in equation 4, which is used to calculate EVPXI can be calculated as above. However, calculating the EVWPXI for the $i^\mathrm{th}$ parameter(s) requires the double looping algorithm which we outline in the pseudo-code in Box 1.
 
 ******
 
-##### Box 1: Calculating EVWPXI$_i$
+#### Box 1: Calculating EVWPXI$_i$
 
 To calculate EVPXI for any given parameter or parameters of interest, which we will denote as the $i^\mathrm{th}$ parameter(s), we apply the following algorithm to the 375 alternative parameterizations of the 169 parameters.
 
@@ -398,25 +403,25 @@ Average the result of step 6 across each alternative parameterization $p$: $Mean
 
 Using the algorithm above we calculated the EVPXI for all 169 parameters. Using the same algorithm we then calculated the EVPXI for pairs of parameters simultaneously, such that the $i^\mathrm{th}$ parameter was now two parameters instead of one. First we took the top two most valuable transition probabilities that transition away from each of the four states and calculated their joint EVPXI. Then we did the same for the top pair of parameters for each management action. With these results we can see which state or management action it would be most beneficial to focus learning on.
 
-Finally we recalculated the EVPI and EVPXI for all transition probabilities, this time varying the constraint on the amount of ET management allowable. This has the effect of changing the size of the feasible management region and changing the position of the two left-most vertices in \@ref(fig:managementplot). We recalculated the EVI for a maximum allowable amount of thinning from 10 to 100% in increments of 10%.
+Finally we recalculated the EVPI and EVPXI for all transition probabilities, this time varying the constraint on the amount of ET management allowable. This has the effect of changing the size of the feasible management region and changing the position of the two left-most vertices in \@ref(fig:Figure1). We recalculated the EVI for a maximum allowable amount of thinning from 10 to 100% in increments of 10%.
 
-## Results {-}
+# Results {-}
 
-### MARS approximation of the state and transition model {-}
+## MARS approximation of the state and transition model {-}
 
 The MARS models had good fit to the STM output data. The average cross-validated (ten-fold) R$^2$ was at least 93% for each of the three MARS models.
 
-### EVWOI: Optimal management in the face of uncertainty {-}
+## EVWOI: Optimal management in the face of uncertainty {-}
 
 With the original information elicited from the five experts, the optimal decision would be to put 100% of the BIFAW under the NM option regardless of the constraint applied to the ET option. Given the optimal decision is made with the original information, managers would expect, on average, to see approximately `r round(evwoi * 100)`% of the BIFAW in a mature state after 150 years. This represents a land area of `r fmt(area * evwoi)` ha, a `r fmt(area * (evwoi- ini_pc))` ha increase over the initial amount (`r fmt(area * ini_pc)` ha, `r fmt(ini_pc * 100)`%) estimated by the five experts.
 
-### EVPI {-}
+## EVPI {-}
 
-If the managers of the BIFAW had perfect knowledge and could at most, thin 20% of landscape, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha). This means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure \@ref(fig:resultsplot1)). For managers, this area of mature woodland represents the upper limit on what resources they should be willing to spend on improving their models of BIFAW dynamics. If the resources necessary were worth more than this amount of mature woodland to them then it would be irrational to seek to reduce the uncertainty. 
+If the managers of the BIFAW had perfect knowledge and could at most, thin 20% of landscape, they would expect on average to see `r round((evpi["evi"] + evwoi) * 100)`% mature woodland after 150 years (which is an EVWPI of `r fmt(area * (evpi["evi"] + evwoi))` ha). This means that the EVPI is `r round(evpi["evi"] * 100)`% or `r fmt(area * evpi["evi"])` ha (Figure \@ref(fig:Figure3)). For managers, this area of mature woodland represents the upper limit on what resources they should be willing to spend on improving their models of BIFAW dynamics. If the resources necessary were worth more than this amount of mature woodland to them then it would be irrational to seek to reduce the uncertainty. 
 
 (ref:resultsplot1) The expected value of partial perfect information (EVPXI) for the top four transition probabilities on their own (top panel), the top two transition probabilities out of each state (middle panel) and the top two transition probabilities for each management option (bottom panel) compared with the expected value of perfect information (EVPI).
 
-```{r resultsplot1, fig.cap = '(ref:resultsplot1)'}
+```{r Figure3, fig.cap = '(ref:resultsplot1)', fig.path = ""}
 ggplot(evi) +
 aes(parameters, evi, width = width, fill = evpi) +
 geom_bar(stat = "identity") +
@@ -433,17 +438,17 @@ theme_bw()
 
 In calculating EVPI the 100% NM solution was optimal `r prop_act[1]`% of the time, while the 100% HF solution was only optimal `r prop_act[2]`% of the time. Of the solutions including 20% ET, the solution including 80% NM and the solution including 80% HF, were optimal `r prop_act[3]`% and `r prop_act[4]`% respectively.
 
-### EVPXI {-}
+## EVPXI {-}
 
-Of the 169 transition probabilities, most but not all, had zero or negligible EVPXI (i.e., EVWXI$_i$ $\approx$ EVWOI). Figure \@ref(fig:resultsplot1) (top panel) shows the top four most valuable parameters, while remaining parameters had EVPI $<$%1. Notably, one parameter (the probability of woodland transitioning from a low-density to a high density regrowth state, due to coppicing of tree stems, when the BIFAW is left unmanaged) was `r round(evpxi_all[1, "evi"] * 100)`%. To managers, this means if they could completely resolve the uncertainty in this parameter alone, they would expect to manage the BIFAW so much more optimally that on average, they would see `r fmt(evpxi_all[1, "evi"] * area)` ha more mature woodland in 150 years than if they managed the forest under their initial level of uncertainty.
+Of the 169 transition probabilities, most but not all, had zero or negligible EVPXI (i.e., EVWXI$_i$ $\approx$ EVWOI). Figure \@ref(fig:Figure3) (top panel) shows the top four most valuable parameters, while remaining parameters had EVPI $<$%1. Notably, one parameter (the probability of woodland transitioning from a low-density to a high density regrowth state, due to coppicing of tree stems, when the BIFAW is left unmanaged) was `r round(evpxi_all[1, "evi"] * 100)`%. To managers, this means if they could completely resolve the uncertainty in this parameter alone, they would expect to manage the BIFAW so much more optimally that on average, they would see `r fmt(evpxi_all[1, "evi"] * area)` ha more mature woodland in 150 years than if they managed the forest under their initial level of uncertainty.
 
-### EVI when constraint on management changes {-}
+## EVI when constraint on management changes {-}
 
-Changing the allowable amount of thinning of the BIFAW from 10 to 100%, that is, altering the constraint on the ET management option, changes the EVPI and the EVPXI for some parameters (Figure \@ref(fig:resultsplot2)). The EVPI and the EVPXI of the most valuable transition probability parameter (according to the analyses in the preceding section) associated with ET increased linearly as the constraint on ET was relaxed. The EVPI increased from 6 to 9% while under a regime of ecological thinning the increase in EVPXI of the probability of transitioning from MLDW to HDRG due to fuel reduction burning was more modest, going from 0 to 0.1%. The EVPXI of the parameters associated with other management options, in contrast, are invariant with respect to the constraint on the amount of ET.
+Changing the allowable amount of thinning of the BIFAW from 10 to 100%, that is, altering the constraint on the ET management option, changes the EVPI and the EVPXI for some parameters (Figure \@ref(fig:Figure4)). The EVPI and the EVPXI of the most valuable transition probability parameter (according to the analyses in the preceding section) associated with ET increased linearly as the constraint on ET was relaxed. The EVPI increased from 6 to 9% while under a regime of ecological thinning the increase in EVPXI of the probability of transitioning from MLDW to HDRG due to fuel reduction burning was more modest, going from 0 to 0.1%. The EVPXI of the parameters associated with other management options, in contrast, are invariant with respect to the constraint on the amount of ET.
 
 (ref:resultsplot2) Response of the EVI to changing the constraint on the allowable proportion of the BIFAW to undergo ecological thinning (ET). The top grey line is EVPI. The three black lines are the EVPXI for the most valuable parameter associated with each action.
 
-```{r resultsplot2, fig.cap = '(ref:resultsplot2)'}
+```{r Figure4, fig.cap = '(ref:resultsplot2)', fig.path = ""}
 ggplot() +
 aes(x = max_eco, y = evi) +
 geom_line(
@@ -470,7 +475,7 @@ theme_bw() +
 theme(legend.justification = c(0, 1), legend.position = c(0.01, .99))
 ```
 
-## Discussion {-}
+# Discussion {-}
 
 The most important implication of these analyses for managers, is that the most cost-effective strategies did not include either the most desired states (mature low-density or high-density woodlands), nor what would be thought of as the least understood management strategy (thinning). As such, managers cannot just rely on intuition to tell them where the most value of information is. Critical uncertainties may not be the most uncertain, or even the uncertainties to which outcomes are most sensitive. Critical uncertainties are the those that, when are they reduced, can change which action is taken. 
 
@@ -486,7 +491,7 @@ However, such an approach can be computationally expensive with models such as S
 
 The analyses we performed required us to make assumptions regarding the monitoring to update the parameters in the model. For monitoring to take place in the manner described, vegetation states must be able to easily be determined in the field. In addition they must be identifiable to a degree of accuracy that they can be distinguished from one another, so that a transition between states is evident and recordable after revisits occurring in a short space of time. States must not only themselves be identifiable, but the surveyor must also be able to tell that a unit of vegetation has been in a state for the required period of time, for a specific transition to occur, and that any transition that does occur has occurred due to a specific causal agent. For some transition probabilities this set of assumptions seems plausible. For instance, the transition from low to high-density regrowth due to coppicing may be simple to identify and record, whereas recognizing that a unit of vegetation remained as low-density regrowth because of combination of drought and mistletoe may be far more difficult. This problem arises because state-transition models are only supposed to represent vegetation dynamics on average and do not necessarily reflect directly observable phenomenon.
 
-### Conclusion {-}
+# Conclusions {-}
 
 In summary, value of information analyses could be performed to inform monitoring and even decide whether it should take place at all. We have shown that a value of information analysis can be used to identify which parts of a complex model system are most valuable to address. Given the assumptions we have outlined above and noting that our conclusions are specific to the case we present here, managers could focus scarce monitoring resources first on the harvest management option and the low-density regrowth states. Here we have demonstrated how to overcome the challenges of implementing a VOI analysis for a complex, continuous model.
 
