@@ -26,4 +26,3 @@ parameter of interest associated with.}
 Calculate the expected value of information for box ironbark and woodland 
 management
 }
-

@@ -1,6 +1,5 @@
 ^\.Rproj\.user$
 ^.*\.Rproj$
-^chicago-author-date\.csl$
 ^voiWoodland\.Rmd$
 ^voiWoodland\.bib$
 ^voiWoodland_cache.*
@@ -8,4 +7,7 @@
 ^voiWoodland\.pdf$
 ^voiWoodland\.log$
 ^voiWoodland\.tex$
-
+^Figure.*
+^abstract\.tex$
+^acknowledgments\.Rmd$
+^ea\.bst$
