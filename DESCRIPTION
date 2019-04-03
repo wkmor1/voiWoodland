@@ -1,18 +1,23 @@
 Package: voiWoodland
-Title: Value of information for woodland management
+Title: The value of information for woodland management---updating a state–transition model
 Version: 1.0.0
 Authors@R: person(c("William", "Keith"), "Morris", email = "wkmor1@gmail.com", role = c("aut", "cre"))
-Description: Value of information for woodland management What you can do,
-    tell's you what you need to know. Vegetation is often managed under uncertainty.
-    Experimentation and monitoring can reduce uncertainty and therefore allow
-    management decisions with greater expected benefits. However, the decision
-    to experiment or monitor at all is only rational if the expected net gain is
-    greater than the cost of sampling. A value of information analysis can a priori
-    assess the efficacy of seeking to reduce uncertainty via sampling. I performed
-    a value of information analysis for Box-Ironbark Forests and Woodland management
-    in central Victoria. This analysis reveals whether to experiment and monitor
-    to reduce uncertainty in a system model, as well as which aspects of model
-    uncertainty are most cost-effective to address.
+Description: Value of information (VOI) analyses reveal the expected benefit of reducing uncertainty to a
+decision maker. Most ecological VOI analyses have focused on population models rarely addressing more
+complex community models. We performed a VOI analysis for a complex state–transition model of
+Box-Ironbark Forest and Woodland management. With three management alternatives (limited harvest/
+firewood removal (HF), ecological thinning (ET), and no management), managing the system optimally
+(for 150 yr) with the original information would, on average, increase the amount of forest in a desirable
+state from 19% to 35% (a 16-percentage point increase). Resolving all uncertainty would, on average,
+increase the final percentage to 42% (a 19-percentage point increase). However, only resolving the uncertainty
+for a single parameter was worth almost two-thirds the value of resolving all uncertainty. We found
+the VOI to depend on the number of management options, increasing as the management flexibility
+increased. Our analyses show it is more cost-effective to monitor low-density regrowth forest than other
+states and more cost-effective to experiment with the no-management alternative than the other manage-
+ment alternatives. Importantly, the most cost-effective strategies did not include either the most desired
+forest states or the least understood management strategy, ET. This implies that managers cannot just rely
+on intuition to tell them where the most VOI will lie, as critical uncertainties in a complex system are
+sometimes cryptic.
 Depends:
     R (>= 3.2.1),
     earth
